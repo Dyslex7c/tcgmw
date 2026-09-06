@@ -1,0 +1,493 @@
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Michroma&family=Orbitron:wght@600;700;800;900&family=Oxanium:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Russo+One&family=Share+Tech+Mono&family=Syne:wght@700;800&family=Teko:wght@500;600;700&family=Unbounded:wght@700;800;900&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #07090e;
+  --foreground: #f8fafc;
+  --font-silkscreen: 'Silkscreen', cursive, sans-serif;
+  --font-michroma: 'Silkscreen', 'Michroma', sans-serif;
+  --font-unbounded: 'Unbounded', 'Syne', 'Russo One', sans-serif;
+  --font-syne: 'Syne', 'Unbounded', sans-serif;
+  --font-hanken: 'Exo 2', 'Rajdhani', system-ui, -apple-system, sans-serif;
+  --font-chakra: 'Oxanium', 'Chakra Petch', sans-serif;
+  --font-inconsolata: 'Share Tech Mono', 'Inconsolata', monospace;
+  --font-druk: 'Teko', 'Russo One', 'Orbitron', Impact, sans-serif;
+  --font-teko: 'Teko', 'Russo One', sans-serif;
+  --font-oxanium: 'Oxanium', 'Chakra Petch', sans-serif;
+  --font-rajdhani: 'Rajdhani', sans-serif;
+  --font-exo: 'Exo 2', sans-serif;
+  --font-orbitron: 'Orbitron', sans-serif;
+  --font-share-mono: 'Share Tech Mono', monospace;
+}
+
+body {
+  background-color: #07090e;
+  color: #f8fafc;
+  overflow-x: hidden;
+  font-family: var(--font-hanken);
+  letter-spacing: 0.01em;
+}
+
+/* Specialized High-Performance Gaming Typography */
+.font-hanken, .font-exo {
+  font-family: var(--font-hanken);
+}
+
+.font-chakra, .font-oxanium {
+  font-family: var(--font-chakra);
+  letter-spacing: 0.025em;
+}
+
+.font-inconsolata, .font-share-mono, .font-mono-nums {
+  font-family: var(--font-inconsolata);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.font-druk, .font-teko {
+  font-family: var(--font-druk);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 0.92;
+}
+
+.font-rajdhani {
+  font-family: var(--font-rajdhani);
+  letter-spacing: 0.02em;
+}
+
+.font-orbitron {
+  font-family: var(--font-orbitron);
+  letter-spacing: 0.04em;
+}
+
+.font-silkscreen, .silkscreen-regular {
+  font-family: var(--font-silkscreen), 'Silkscreen', cursive, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.05em;
+  line-height: 1.25;
+}
+
+.silkscreen-bold,
+.font-silkscreen.font-bold,
+.font-silkscreen.font-black,
+.font-silkscreen-bold,
+.font-bold.font-silkscreen {
+  font-family: var(--font-silkscreen), 'Silkscreen', cursive, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0.05em;
+  line-height: 1.25;
+}
+
+.font-michroma, .michroma-regular {
+  font-family: var(--font-silkscreen), 'Silkscreen', 'Michroma', sans-serif;
+  font-style: normal;
+  letter-spacing: 0.04em;
+}
+
+.font-michroma.font-bold,
+.font-michroma.font-black,
+.font-michroma-bold {
+  font-family: var(--font-silkscreen), 'Silkscreen', 'Michroma', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.font-unbounded {
+  font-family: var(--font-unbounded);
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+
+.font-syne {
+  font-family: var(--font-syne);
+  letter-spacing: -0.01em;
+}
+
+/* Custom Cyberpunk & TCG Shimmer Effects */
+@keyframes holo-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes pulse-glow-pump {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(0, 255, 163, 0.4), inset 0 0 15px rgba(0, 255, 163, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 255, 163, 0.8), inset 0 0 25px rgba(0, 255, 163, 0.4);
+  }
+}
+
+@keyframes pulse-glow-dump {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(255, 59, 105, 0.4), inset 0 0 15px rgba(255, 59, 105, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 59, 105, 0.8), inset 0 0 25px rgba(255, 59, 105, 0.4);
+  }
+}
+
+.animate-pump {
+  animation: pulse-glow-pump 2s infinite ease-in-out;
+}
+
+.animate-dump {
+  animation: pulse-glow-dump 2s infinite ease-in-out;
+}
+
+.holo-card-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 0, 128, 0.15) 25%,
+    rgba(0, 255, 255, 0.2) 50%,
+    rgba(255, 215, 0, 0.15) 75%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 200%;
+  animation: holo-shimmer 6s ease infinite;
+  pointer-events: none;
+}
+
+.gold-foil-overlay {
+  background: linear-gradient(
+    115deg,
+    rgba(255, 215, 0, 0.05) 0%,
+    rgba(255, 235, 120, 0.3) 30%,
+    rgba(255, 180, 0, 0.1) 50%,
+    rgba(255, 245, 180, 0.35) 70%,
+    rgba(255, 215, 0, 0.05) 100%
+  );
+  background-size: 250% 250%;
+  animation: holo-shimmer 4s ease infinite;
+  pointer-events: none;
+}
+
+/* Infinite Self-Looping Slider Animation */
+@keyframes tickerMarquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-ticker-loop {
+  display: flex;
+  width: max-content;
+  animation: tickerMarquee 80s linear infinite;
+  will-change: transform;
+}
+
+.animate-ticker-loop:hover {
+  animation-play-state: paused;
+}
+
+/* Technical Monospace & Grid */
+.font-mono-nums {
+  font-family: var(--font-inconsolata);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0e14;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2638;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2a354d;
+}
+
+/* Battle Arena Combat Animations */
+@keyframes card-lunge-player {
+  0% { transform: translateY(0) scale(1); }
+  35% { transform: translateY(-70px) scale(1.08) rotate(-2deg); filter: brightness(1.25); }
+  60% { transform: translateY(-55px) scale(1.05); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes card-lunge-opponent {
+  0% { transform: translateY(0) scale(1); }
+  35% { transform: translateY(70px) scale(1.08) rotate(2deg); filter: brightness(1.25); }
+  60% { transform: translateY(55px) scale(1.05); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes card-hit-shake {
+  0% { transform: translateX(0) scale(1); }
+  20% { transform: translateX(-12px) scale(0.96) rotate(-2deg); }
+  40% { transform: translateX(10px) scale(0.98) rotate(2deg); }
+  60% { transform: translateX(-6px) scale(0.99); }
+  80% { transform: translateX(4px); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+@keyframes screen-shake-sm {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-3px, 2px); }
+  40% { transform: translate(3px, -2px); }
+  60% { transform: translate(-2px, -1px); }
+  80% { transform: translate(2px, 1px); }
+}
+
+@keyframes screen-shake-crit {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  15% { transform: translate(-8px, 6px) rotate(-0.5deg); }
+  30% { transform: translate(7px, -6px) rotate(0.5deg); }
+  45% { transform: translate(-5px, -4px) rotate(-0.3deg); }
+  60% { transform: translate(4px, 4px) rotate(0.2deg); }
+  75% { transform: translate(-2px, 2px); }
+  90% { transform: translate(2px, -1px); }
+}
+
+@keyframes slash-vfx {
+  0% { transform: scale(0.3) rotate(-35deg); opacity: 0; }
+  30% { transform: scale(1.3) rotate(-35deg); opacity: 1; }
+  100% { transform: scale(1.6) rotate(-35deg); opacity: 0; }
+}
+
+@keyframes skill-energy-wave {
+  0% { transform: scale(0.7); opacity: 0.9; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes float-damage {
+  0% { transform: translate(-50%, 0) scale(0.6); opacity: 0; }
+  20% { transform: translate(-50%, -20px) scale(1.3); opacity: 1; }
+  70% { transform: translate(-50%, -45px) scale(1.1); opacity: 1; }
+  100% { transform: translate(-50%, -75px) scale(0.85); opacity: 0; }
+}
+
+.animate-lunge-player {
+  animation: card-lunge-player 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-lunge-opponent {
+  animation: card-lunge-opponent 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-hit-shake {
+  animation: card-hit-shake 0.4s ease-out;
+}
+
+.shake-screen-sm {
+  animation: screen-shake-sm 0.25s ease-in-out;
+}
+
+.shake-screen-crit {
+  animation: screen-shake-crit 0.4s ease-in-out;
+}
+
+.animate-slash {
+  animation: slash-vfx 0.35s ease-out forwards;
+}
+
+.animate-skill-burst {
+  animation: skill-energy-wave 0.6s ease-out forwards;
+}
+
+.animate-damage-float {
+  animation: float-damage 1.2s ease-out forwards;
+}
+
+@keyframes radar-sweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes radar-sonar {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+.animate-radar-sweep {
+  animation: radar-sweep 2.8s linear infinite;
+}
+
+.animate-radar-sonar {
+  animation: radar-sonar 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes laser-beam-strike {
+  0% { transform: scaleY(0.1) translateY(80px); opacity: 0; }
+  30% { transform: scaleY(1.2) translateY(-20px); opacity: 1; }
+  70% { transform: scaleY(1) translateY(-60px); opacity: 0.9; }
+  100% { transform: scaleY(0.2) translateY(-120px); opacity: 0; }
+}
+
+@keyframes target-reticle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+  50% { transform: scale(1.08) rotate(45deg); opacity: 1; }
+}
+
+@keyframes energy-ready-pulse {
+  0%, 100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.4), inset 0 0 10px rgba(6, 182, 212, 0.3); border-color: rgba(6, 182, 212, 0.8); }
+  50% { box-shadow: 0 0 30px rgba(6, 182, 212, 0.9), inset 0 0 20px rgba(6, 182, 212, 0.6); border-color: rgba(34, 211, 238, 1); }
+}
+
+@keyframes arena-ring-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-beam-strike {
+  animation: laser-beam-strike 0.35s ease-out forwards;
+}
+
+.animate-target-reticle {
+  animation: target-reticle 1.8s ease-in-out infinite;
+}
+
+.animate-energy-ready {
+  animation: energy-ready-pulse 1.4s ease-in-out infinite;
+}
+
+.animate-arena-ring {
+  animation: arena-ring-spin 30s linear infinite;
+}
+
+@keyframes laser-beam-horizontal-p {
+  0% { transform: scaleX(0) translateX(-30px); opacity: 0; }
+  30% { transform: scaleX(1.3) translateX(0px); opacity: 1; filter: drop-shadow(0 0 12px #34d399); }
+  70% { transform: scaleX(1.1) translateX(15px); opacity: 0.9; filter: drop-shadow(0 0 16px #22d3ee); }
+  100% { transform: scaleX(0.1) translateX(45px); opacity: 0; }
+}
+
+@keyframes laser-beam-horizontal-o {
+  0% { transform: scaleX(0) translateX(30px); opacity: 0; }
+  30% { transform: scaleX(1.3) translateX(0px); opacity: 1; filter: drop-shadow(0 0 12px #f43f5e); }
+  70% { transform: scaleX(1.1) translateX(-15px); opacity: 0.9; filter: drop-shadow(0 0 16px #fb7185); }
+  100% { transform: scaleX(0.1) translateX(-45px); opacity: 0; }
+}
+
+.animate-beam-horizontal-player {
+  animation: laser-beam-horizontal-p 0.35s ease-out forwards;
+}
+
+.animate-beam-horizontal-opponent {
+  animation: laser-beam-horizontal-o 0.35s ease-out forwards;
+}
+
+@keyframes card-lunge-right {
+  0% { transform: translateX(0) scale(1); }
+  35% { transform: translateX(35px) scale(1.04) rotate(1deg); filter: brightness(1.25); }
+  60% { transform: translateX(20px) scale(1.02); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+@keyframes card-lunge-left {
+  0% { transform: translateX(0) scale(1); }
+  35% { transform: translateX(-35px) scale(1.04) rotate(-1deg); filter: brightness(1.25); }
+  60% { transform: translateX(-20px) scale(1.02); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+.animate-lunge-right {
+  animation: card-lunge-right 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-lunge-left {
+  animation: card-lunge-left 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Pokemon-Style Elemental Status Effects & Auras */
+@keyframes status-frost {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.5), inset 0 0 10px rgba(56, 189, 248, 0.3);
+    border-color: rgba(56, 189, 248, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(125, 211, 252, 0.9), inset 0 0 18px rgba(56, 189, 248, 0.6);
+    border-color: rgba(186, 230, 253, 1);
+  }
+}
+
+@keyframes status-flame {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.6), inset 0 0 8px rgba(239, 68, 68, 0.4);
+    border-color: rgba(249, 115, 22, 0.85);
+  }
+  50% {
+    box-shadow: 0 0 26px rgba(239, 68, 68, 0.85), inset 0 0 16px rgba(249, 115, 22, 0.6);
+    border-color: rgba(254, 215, 170, 0.9);
+  }
+}
+
+@keyframes status-electricity {
+  0%, 100% {
+    box-shadow: 0 0 14px rgba(234, 179, 8, 0.6), inset 0 0 8px rgba(250, 204, 21, 0.4);
+    border-color: rgba(250, 204, 21, 0.8);
+    transform: translate(0, 0);
+  }
+  25% {
+    box-shadow: 0 0 22px rgba(250, 204, 21, 0.9), inset 0 0 14px rgba(234, 179, 8, 0.6);
+    transform: translate(-1px, 1px);
+  }
+  75% {
+    box-shadow: 0 0 18px rgba(253, 224, 71, 0.85);
+    transform: translate(1px, -1px);
+  }
+}
+
+@keyframes status-toxin {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.55), inset 0 0 10px rgba(147, 51, 234, 0.35);
+    border-color: rgba(168, 85, 247, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 26px rgba(192, 132, 252, 0.85), inset 0 0 18px rgba(168, 85, 247, 0.6);
+    border-color: rgba(216, 180, 254, 1);
+  }
+}
+
+.status-aura-freeze {
+  animation: status-frost 1.8s ease-in-out infinite !important;
+  border-color: rgba(56, 189, 248, 0.8) !important;
+}
+
+.status-aura-burn {
+  animation: status-flame 1.2s ease-in-out infinite !important;
+  border-color: rgba(249, 115, 22, 0.8) !important;
+}
+
+.status-aura-shock {
+  animation: status-electricity 0.8s ease-in-out infinite !important;
+  border-color: rgba(234, 179, 8, 0.8) !important;
+}
+
+.status-aura-poison {
+  animation: status-toxin 1.5s ease-in-out infinite !important;
+  border-color: rgba(168, 85, 247, 0.8) !important;
+}
+
+@keyframes elemental-impact {
+  0% { transform: scale(0.4) rotate(0deg); opacity: 0; filter: brightness(2); }
+  25% { transform: scale(1.3) rotate(5deg); opacity: 1; filter: brightness(1.5); }
+  70% { transform: scale(1.1) rotate(-3deg); opacity: 0.9; }
+  100% { transform: scale(1.4) rotate(0deg); opacity: 0; }
+}
+
+.animate-elemental-impact {
+  animation: elemental-impact 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+
