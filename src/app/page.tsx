@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { BASE_CARD_CATALOG, EVM_CARD_CATALOG } from "@/lib/storage/mockCards";
 import { marketService } from "@/lib/market/priceFeed";
@@ -9,7 +10,19 @@ import { sound } from "@/lib/audio/soundEngine";
 import { CardComponent } from "@/components/cards/CardComponent";
 import { CardDetailModal } from "@/components/cards/CardDetailModal";
 import { DriftCardTile } from "@/components/cards/DriftCardTile";
-import DriftWall from "@/components/ui/DriftWall";
+import type { ComponentType } from "react";
+import type { DriftWallProps } from "@/components/ui/DriftWall";
+import dynamic from "next/dynamic";
+const DriftWall = dynamic(() => import("@/components/ui/DriftWall"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full min-h-[500px] flex items-center justify-center bg-[#070A10]/40 rounded-3xl border border-slate-800/40">
+      <div className="flex items-center space-x-2 text-slate-500 font-mono text-xs animate-pulse">
+        <span>INITIALIZING LIVE DRIFT MATRIX...</span>
+      </div>
+    </div>
+  ),
+}) as ComponentType<DriftWallProps<Card>>;
 import { Card } from "@/types";
 import {
   Swords,
@@ -22,13 +35,28 @@ import {
   Activity,
   ArrowRight,
   TrendingUp,
-  Sparkles
+  Sparkles,
+  Copy,
+  Check,
+  ExternalLink
 } from "lucide-react";
+import { AVOX_TOKEN_ADDRESS, isAvoxTokenConfigured, getExplorerAddressUrl } from "@/lib/constants/contracts";
 
 export default function HomePage() {
   const [prices, setPrices] = useState(marketService.getPrices());
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  const [copied, setCopied] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleCopyAddress = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    sound.playClick();
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(AVOX_TOKEN_ADDRESS);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   useEffect(() => {
     const unsub = marketService.subscribe((updated) => {
@@ -104,12 +132,20 @@ export default function HomePage() {
             {/* Left Column: Headlines & Call to Actions */}
             <div className="max-w-3xl space-y-6 text-center lg:text-left">
               {/* Tactical Header Label */}
-              <div className="flex items-center space-x-2.5 text-xs font-chakra font-bold tracking-widest text-orange-400">
+              <div className="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-full bg-[#0D121F]/90 border border-orange-500/30 backdrop-blur-sm text-xs font-chakra font-bold tracking-widest text-orange-400 shadow-[0_0_15px_rgba(234,88,12,0.2)]">
+                <Image
+                  src="/logo.png"
+                  alt="AVOX"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5 object-contain drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]"
+                  priority
+                />
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                 </span>
-                <span>SEASON 01 // LIVE COMBAT ARENA</span>
+                <span>AVOX COMBAT PROTOCOL // SEASON 01</span>
               </div>
 
               {/* Hero Heading (Silkscreen retro arcade font) */}
@@ -154,6 +190,50 @@ export default function HomePage() {
                 >
                   Browse Armory
                 </Link>
+              </div>
+
+              {/* Copyable AVOX Token Address Bar */}
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2.5">
+                <div className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-[#090D17]/95 border border-slate-800 hover:border-orange-500/40 transition-colors text-xs font-mono shadow-md backdrop-blur-sm">
+                  <div className="flex items-center space-x-1.5 text-[10px] font-chakra font-bold text-orange-400 uppercase tracking-wider shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+                    <span>$AVOX Contract:</span>
+                  </div>
+                  <span className="text-[11px] text-slate-300 font-mono hidden sm:inline select-all">
+                    {AVOX_TOKEN_ADDRESS}
+                  </span>
+                  <span className="text-[11px] text-slate-300 font-mono sm:hidden select-all">
+                    {AVOX_TOKEN_ADDRESS.slice(0, 8)}...{AVOX_TOKEN_ADDRESS.slice(-6)}
+                  </span>
+                  <button
+                    onClick={handleCopyAddress}
+                    className="p-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer ml-1 shrink-0"
+                    title="Copy AVOX Token Address"
+                  >
+                    {copied ? (
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+                  {isAvoxTokenConfigured && (
+                    <a
+                      href={getExplorerAddressUrl(AVOX_TOKEN_ADDRESS)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-orange-400 transition-colors shrink-0"
+                      title="View on Block Explorer"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
+                {copied && (
+                  <span className="text-[10px] font-chakra text-emerald-400 font-bold animate-in fade-in flex items-center space-x-1">
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Copied!</span>
+                  </span>
+                )}
               </div>
             </div>
 

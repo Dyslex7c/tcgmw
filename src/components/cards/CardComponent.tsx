@@ -228,10 +228,6 @@ export function CardComponent({
         className={`w-full h-full border ${theme.border} bg-gradient-to-b ${theme.gradient}`}
         innerClassName="p-3 w-full h-full flex flex-col justify-between"
       >
-        {/* Foil Overlays */}
-        {card.foilType === "Holo" && <div className="absolute inset-0 rounded-2xl holo-card-overlay pointer-events-none" />}
-        {card.foilType === "GoldFoil" && <div className="absolute inset-0 rounded-2xl gold-foil-overlay pointer-events-none" />}
-
       {/* Top Header: Asset Icon, Symbol, Rarity & Foil Badge */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center space-x-1.5">

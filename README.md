@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ⚔️ MarketWars
 
-## Getting Started
+> **Web3 Trading Card Game (TCG) Powered by Live Crypto Market Volatility & Verifiable Smart Contracts**  
+> Deployed on **Ethereum Sepolia Testnet** (`chainId: 11155111`)
 
-First, run the development server:
+---
 
+## ⚡ Overview
+
+**MarketWars** is an on-chain competitive TCG where cards represent real cryptocurrency assets and their in-battle stats update live from real-time price feeds. Cards gain massive buffs during rallies and suffer debuffs during market dumps. Packs are opened using verifiable on-chain randomness, and all cards are tradeable ERC-721 NFTs.
+
+- 📈 **Live Volatility Scaling**: Real-time Binance / Pyth price feeds dynamically modify card ATK, DEF, and SPD mid-match.
+- ❄️ **Pokémon-Style Elemental Combat**: Fast 3v3 blitz battles featuring **Freeze** (turn-skipping Cold Storage), **Burn** (damage-over-time), **Shock** (action fizzle & speed reduction), and **Poison** (escalating toxic damage).
+- 🎲 **Verifiable Pack Openings**: Chainlink VRF v2.5-compatible randomness commitment and proof inspection.
+- 🛒 **Non-Custodial Secondary Marketplace**: Buy, sell, and trade minted card NFTs with an automated 2.5% protocol fee routed to the prize pool.
+- 🏆 **Community Prize Pool**: Transparent on-chain treasury automatically funded by 20% of all booster pack purchases and 2.5% of marketplace volume.
+- 👛 **Reown AppKit Web3 Integration**: Seamless wallet connection supporting MetaMask, Coinbase Wallet, WalletConnect, and Rabby with native Sepolia network switching.
+- 🔊 **Native Web Audio Engine**: 100% procedurally synthesized elemental sound effects directly through the Web Audio API.
+
+---
+
+## 📜 Full Documentation
+
+For the comprehensive technical specification, mathematical formulas, smart contract ABIs, and architecture deep dive, see:
+
+👉 **[DOCUMENTATION.md](./DOCUMENTATION.md)**
+
+---
+
+## 🔗 Smart Contract Deployments (Ethereum Sepolia)
+
+All 4 contracts are verified on **Ethereum Sepolia** (Chain ID: `11155111`):
+
+| Contract | Address | Explorer Link |
+| :--- | :--- | :--- |
+| **MarketWarsCard** (ERC-721) | `0x209139a7c49a2ea834daf5ff496008ea02b2fbba` | [Etherscan](https://sepolia.etherscan.io/address/0x209139a7c49a2ea834daf5ff496008ea02b2fbba) |
+| **MarketWarsPackVRF** | `0x1dc2656a699c1bf6d827c555c994f5fd89e1ff75` | [Etherscan](https://sepolia.etherscan.io/address/0x1dc2656a699c1bf6d827c555c994f5fd89e1ff75) |
+| **MarketWarsMarketplace** | `0xb20655cb8160350ece1897a86ebbf832b4c26851` | [Etherscan](https://sepolia.etherscan.io/address/0xb20655cb8160350ece1897a86ebbf832b4c26851) |
+| **MarketWarsPrizePool** | `0xdb2db0f2bd83cfb8d5f1db480caf661978624f56` | [Etherscan](https://sepolia.etherscan.io/address/0xdb2db0f2bd83cfb8d5f1db480caf661978624f56) |
+
+---
+
+## 🛠️ Quickstart
+
+### 1. Install Dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Configure Environment
+Create `.env.local`:
+```env
+NEXT_PUBLIC_REOWN_PROJECT_ID=912198beeaebbbd8ecf6655c63be1884
+NEXT_PUBLIC_DEFAULT_CHAIN_ID=11155111
+NEXT_PUBLIC_CARD_CONTRACT=0x209139a7c49a2ea834daf5ff496008ea02b2fbba
+NEXT_PUBLIC_PRIZEPOOL_CONTRACT=0xdb2db0f2bd83cfb8d5f1db480caf661978624f56
+NEXT_PUBLIC_PACK_CONTRACT=0x1dc2656a699c1bf6d827c555c994f5fd89e1ff75
+NEXT_PUBLIC_MARKETPLACE_CONTRACT=0xb20655cb8160350ece1897a86ebbf832b4c26851
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Run Development Server
+```bash
+npx next dev --webpack
+```
+Open [http://localhost:3000](http://localhost:3000).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Run Test Suite & Type Check
+```bash
+# Type check
+npx tsc --noEmit
 
-## Learn More
+# Run core engine verification suite (12 tests)
+npm test
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎮 Game Routes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **`/`**: Home landing page & live market ticker marquee
+- **`/battle`**: 3v3 Arena Coliseum with elemental moves & live volatility modifiers
+- **`/packs`**: Booster pack cryptographic opening stage with VRF verification
+- **`/marketplace`**: Secondary P2P trading market with on-chain escrow
+- **`/prizepool`**: Real-time treasury inflows, countdown timer & payouts
+- **`/profile`**: Deck builder, collection showcase & stats
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*Built with Next.js 16, Viem, Reown AppKit, and Solidity on Ethereum Sepolia.*

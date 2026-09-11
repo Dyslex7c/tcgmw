@@ -146,32 +146,9 @@ body {
   animation: pulse-glow-dump 2s infinite ease-in-out;
 }
 
-.holo-card-overlay {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 0, 128, 0.15) 25%,
-    rgba(0, 255, 255, 0.2) 50%,
-    rgba(255, 215, 0, 0.15) 75%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  background-size: 200% 200%;
-  animation: holo-shimmer 6s ease infinite;
-  pointer-events: none;
-}
-
+.holo-card-overlay,
 .gold-foil-overlay {
-  background: linear-gradient(
-    115deg,
-    rgba(255, 215, 0, 0.05) 0%,
-    rgba(255, 235, 120, 0.3) 30%,
-    rgba(255, 180, 0, 0.1) 50%,
-    rgba(255, 245, 180, 0.35) 70%,
-    rgba(255, 215, 0, 0.05) 100%
-  );
-  background-size: 250% 250%;
-  animation: holo-shimmer 4s ease infinite;
-  pointer-events: none;
+  display: none !important;
 }
 
 /* Infinite Self-Looping Slider Animation */
@@ -367,15 +344,15 @@ body {
 
 @keyframes laser-beam-horizontal-p {
   0% { transform: scaleX(0) translateX(-30px); opacity: 0; }
-  30% { transform: scaleX(1.3) translateX(0px); opacity: 1; filter: drop-shadow(0 0 12px #34d399); }
-  70% { transform: scaleX(1.1) translateX(15px); opacity: 0.9; filter: drop-shadow(0 0 16px #22d3ee); }
+  30% { transform: scaleX(1.1) translateX(0px); opacity: 0.9; filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.4)); }
+  70% { transform: scaleX(1.0) translateX(15px); opacity: 0.8; filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.3)); }
   100% { transform: scaleX(0.1) translateX(45px); opacity: 0; }
 }
 
 @keyframes laser-beam-horizontal-o {
   0% { transform: scaleX(0) translateX(30px); opacity: 0; }
-  30% { transform: scaleX(1.3) translateX(0px); opacity: 1; filter: drop-shadow(0 0 12px #f43f5e); }
-  70% { transform: scaleX(1.1) translateX(-15px); opacity: 0.9; filter: drop-shadow(0 0 16px #fb7185); }
+  30% { transform: scaleX(1.1) translateX(0px); opacity: 0.9; filter: drop-shadow(0 0 6px rgba(244, 63, 94, 0.4)); }
+  70% { transform: scaleX(1.0) translateX(-15px); opacity: 0.8; filter: drop-shadow(0 0 6px rgba(244, 63, 94, 0.3)); }
   100% { transform: scaleX(0.1) translateX(-45px); opacity: 0; }
 }
 
@@ -389,14 +366,14 @@ body {
 
 @keyframes card-lunge-right {
   0% { transform: translateX(0) scale(1); }
-  35% { transform: translateX(35px) scale(1.04) rotate(1deg); filter: brightness(1.25); }
+  35% { transform: translateX(35px) scale(1.04) rotate(1deg); filter: brightness(1.15); }
   60% { transform: translateX(20px) scale(1.02); }
   100% { transform: translateX(0) scale(1); }
 }
 
 @keyframes card-lunge-left {
   0% { transform: translateX(0) scale(1); }
-  35% { transform: translateX(-35px) scale(1.04) rotate(-1deg); filter: brightness(1.25); }
+  35% { transform: translateX(-35px) scale(1.04) rotate(-1deg); filter: brightness(1.15); }
   60% { transform: translateX(-20px) scale(1.02); }
   100% { transform: translateX(0) scale(1); }
 }
@@ -409,74 +386,69 @@ body {
   animation: card-lunge-left 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Pokemon-Style Elemental Status Effects & Auras */
+/* Subtle Elemental Status Effects & Auras (Muted for Eye Comfort) */
 @keyframes status-frost {
   0%, 100% {
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.5), inset 0 0 10px rgba(56, 189, 248, 0.3);
-    border-color: rgba(56, 189, 248, 0.8);
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.25), inset 0 0 4px rgba(56, 189, 248, 0.15);
+    border-color: rgba(56, 189, 248, 0.45);
   }
   50% {
-    box-shadow: 0 0 28px rgba(125, 211, 252, 0.9), inset 0 0 18px rgba(56, 189, 248, 0.6);
-    border-color: rgba(186, 230, 253, 1);
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.4), inset 0 0 8px rgba(56, 189, 248, 0.25);
+    border-color: rgba(125, 211, 252, 0.6);
   }
 }
 
 @keyframes status-flame {
   0%, 100% {
-    box-shadow: 0 0 15px rgba(249, 115, 22, 0.6), inset 0 0 8px rgba(239, 68, 68, 0.4);
-    border-color: rgba(249, 115, 22, 0.85);
+    box-shadow: 0 0 8px rgba(249, 115, 22, 0.25), inset 0 0 4px rgba(239, 68, 68, 0.15);
+    border-color: rgba(249, 115, 22, 0.45);
   }
   50% {
-    box-shadow: 0 0 26px rgba(239, 68, 68, 0.85), inset 0 0 16px rgba(249, 115, 22, 0.6);
-    border-color: rgba(254, 215, 170, 0.9);
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.4), inset 0 0 8px rgba(249, 115, 22, 0.25);
+    border-color: rgba(251, 146, 60, 0.6);
   }
 }
 
 @keyframes status-electricity {
   0%, 100% {
-    box-shadow: 0 0 14px rgba(234, 179, 8, 0.6), inset 0 0 8px rgba(250, 204, 21, 0.4);
-    border-color: rgba(250, 204, 21, 0.8);
-    transform: translate(0, 0);
+    box-shadow: 0 0 8px rgba(234, 179, 8, 0.25), inset 0 0 4px rgba(250, 204, 21, 0.15);
+    border-color: rgba(234, 179, 8, 0.45);
   }
-  25% {
-    box-shadow: 0 0 22px rgba(250, 204, 21, 0.9), inset 0 0 14px rgba(234, 179, 8, 0.6);
-    transform: translate(-1px, 1px);
-  }
-  75% {
-    box-shadow: 0 0 18px rgba(253, 224, 71, 0.85);
-    transform: translate(1px, -1px);
+  50% {
+    box-shadow: 0 0 14px rgba(250, 204, 21, 0.4), inset 0 0 8px rgba(234, 179, 8, 0.25);
+    border-color: rgba(253, 224, 71, 0.6);
   }
 }
 
 @keyframes status-toxin {
   0%, 100% {
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.55), inset 0 0 10px rgba(147, 51, 234, 0.35);
-    border-color: rgba(168, 85, 247, 0.8);
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.25), inset 0 0 4px rgba(147, 51, 234, 0.15);
+    border-color: rgba(168, 85, 247, 0.45);
   }
   50% {
-    box-shadow: 0 0 26px rgba(192, 132, 252, 0.85), inset 0 0 18px rgba(168, 85, 247, 0.6);
-    border-color: rgba(216, 180, 254, 1);
+    box-shadow: 0 0 14px rgba(168, 85, 247, 0.4), inset 0 0 8px rgba(168, 85, 247, 0.25);
+    border-color: rgba(192, 132, 252, 0.6);
   }
 }
 
 .status-aura-freeze {
-  animation: status-frost 1.8s ease-in-out infinite !important;
-  border-color: rgba(56, 189, 248, 0.8) !important;
+  animation: status-frost 2.5s ease-in-out infinite !important;
+  border-color: rgba(56, 189, 248, 0.4) !important;
 }
 
 .status-aura-burn {
-  animation: status-flame 1.2s ease-in-out infinite !important;
-  border-color: rgba(249, 115, 22, 0.8) !important;
+  animation: status-flame 2s ease-in-out infinite !important;
+  border-color: rgba(249, 115, 22, 0.4) !important;
 }
 
 .status-aura-shock {
-  animation: status-electricity 0.8s ease-in-out infinite !important;
-  border-color: rgba(234, 179, 8, 0.8) !important;
+  animation: status-electricity 1.5s ease-in-out infinite !important;
+  border-color: rgba(234, 179, 8, 0.4) !important;
 }
 
 .status-aura-poison {
-  animation: status-toxin 1.5s ease-in-out infinite !important;
-  border-color: rgba(168, 85, 247, 0.8) !important;
+  animation: status-toxin 2.2s ease-in-out infinite !important;
+  border-color: rgba(168, 85, 247, 0.4) !important;
 }
 
 @keyframes elemental-impact {

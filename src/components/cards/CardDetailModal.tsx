@@ -211,14 +211,6 @@ export function CardDetailModal({ card, onClose }: CardDetailModalProps) {
                 className={`w-full h-full border-2 ${rarityTheme.border} bg-gradient-to-b ${rarityTheme.gradient} shadow-2xl relative overflow-hidden`}
                 innerClassName="p-4 w-full h-full flex flex-col justify-between"
               >
-                {/* Dynamic Foil Overlays */}
-                {card.foilType === "Holo" && (
-                  <div className="absolute inset-0 rounded-2xl holo-card-overlay pointer-events-none" />
-                )}
-                {card.foilType === "GoldFoil" && (
-                  <div className="absolute inset-0 rounded-2xl gold-foil-overlay pointer-events-none" />
-                )}
-
                 {/* Card Header: Chain Logo, Symbol & Rarity Badge */}
                 <div className="flex items-center justify-between z-10">
                   <div className="flex items-center space-x-2">

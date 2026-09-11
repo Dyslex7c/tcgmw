@@ -1,91 +1,38 @@
-import { MarketplaceListing, Card } from "@/types";
+import { MarketplaceListing, Card, AssetSymbol, CardRarity, FoilType } from "@/types";
 import { BASE_CARD_CATALOG } from "@/lib/storage/mockCards";
-import { prizePoolStore } from "@/lib/storage/prizePoolStore";
+import {
+  publicClient,
+  getBrowserWalletClient,
+  marketplaceContractConfig,
+  cardContractConfig,
+  ensureSepoliaNetwork
+} from "@/lib/web3/client";
+import { parseEther, formatEther, decodeEventLog } from "viem";
+import { sepolia } from "viem/chains";
 
-const INITIAL_LISTINGS: MarketplaceListing[] = [
-  {
-    id: "list-1",
-    card: {
-      ...BASE_CARD_CATALOG[2], // SOL Epic
-      id: "market-sol-1",
-      tokenId: 8841,
-      owner: "0x8920...F992"
-    },
-    seller: "0x8920...F992",
-    priceEth: 0.085,
-    listedAt: Date.now() - 86400000 * 2,
-    isActive: true
-  },
-  {
-    id: "list-2",
-    card: {
-      ...BASE_CARD_CATALOG[0], // BTC Legendary Gold Foil
-      id: "market-btc-1",
-      tokenId: 7701,
-      owner: "0x44B1...C399"
-    },
-    seller: "0x44B1...C399",
-    priceEth: 0.45,
-    listedAt: Date.now() - 86400000 * 4,
-    isActive: true
-  },
-  {
-    id: "list-3",
-    card: {
-      ...BASE_CARD_CATALOG[4], // DOGE Rare
-      id: "market-doge-1",
-      tokenId: 1204,
-      owner: "0x33A0...EE21"
-    },
-    seller: "0x33A0...EE21",
-    priceEth: 0.015,
-    listedAt: Date.now() - 86400000 * 1,
-    isActive: true
-  },
-  {
-    id: "list-4",
-    card: {
-      ...BASE_CARD_CATALOG[3], // LINK Epic Holo
-      id: "market-link-1",
-      tokenId: 9940,
-      owner: "0x77E1...00A9"
-    },
-    seller: "0x77E1...00A9",
-    priceEth: 0.095,
-    listedAt: Date.now() - 86400000 * 3,
-    isActive: true
-  },
-  {
-    id: "list-5",
-    card: {
-      ...BASE_CARD_CATALOG[7], // PEPE Rare Holo
-      id: "market-pepe-1",
-      tokenId: 4022,
-      owner: "0x110A...BB42"
-    },
-    seller: "0x110A...BB42",
-    priceEth: 0.045,
-    listedAt: Date.now() - 86400000 * 1,
-    isActive: true
-  },
-  {
-    id: "list-6",
-    card: {
-      ...BASE_CARD_CATALOG[9], // SUI Rare
-      id: "market-sui-1",
-      tokenId: 5590,
-      owner: "0x66B8...88C2"
-    },
-    seller: "0x66B8...88C2",
-    priceEth: 0.025,
-    listedAt: Date.now() - 86400000 * 5,
-    isActive: true
-  }
-];
+const RARITY_MAP: Record<number, CardRarity> = {
+  0: "Common",
+  1: "Rare",
+  2: "Epic",
+  3: "Legendary"
+};
+
+const FOIL_MAP: Record<number, FoilType> = {
+  0: "Standard",
+  1: "Holo",
+  2: "GoldFoil"
+};
 
 class MarketplaceStore {
-  private listings: MarketplaceListing[] = [...INITIAL_LISTINGS];
+  private listings: MarketplaceListing[] = [];
   private listeners: Set<(listings: MarketplaceListing[]) => void> = new Set();
+  private isRefreshing = false;
+
+  constructor() {
+    if (typeof window !== "undefined") {
+      this.refreshListingsFromContract();
+    }
+  }
 
   public getListings(): MarketplaceListing[] {
     return [...this.listings];
@@ -99,49 +46,256 @@ class MarketplaceStore {
     };
   }
 
-  public listCard(card: Card, priceEth: number, seller: string = "0x71C...Demo"): MarketplaceListing {
-    const newListing: MarketplaceListing = {
-      id: `list-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      card: { ...card, owner: seller },
-      seller,
-      priceEth,
-      listedAt: Date.now(),
-      isActive: true
-    };
-    this.listings = [newListing, ...this.listings];
-    this.notify();
-    return newListing;
-  }
-
-  public buyCard(listingId: string, buyer: string = "0x71C...Demo"): { success: boolean; card?: Card; feeEth?: number } {
-    const listing = this.listings.find((l) => l.id === listingId && l.isActive);
-    if (!listing) return { success: false };
-
-    listing.isActive = false;
-
-    // 2.5% protocol fee to Prize Pool
-    const feeEth = Number((listing.priceEth * 0.025).toFixed(5));
-    prizePoolStore.recordInflow(feeEth, "Marketplace Trade Fee (2.5%)", buyer);
-
-    const boughtCard: Card = {
-      ...listing.card,
-      owner: buyer
-    };
-
-    this.notify();
-    return { success: true, card: boughtCard, feeEth };
-  }
-
-  public cancelListing(listingId: string): boolean {
-    const listing = this.listings.find((l) => l.id === listingId && l.isActive);
-    if (!listing) return false;
-    listing.isActive = false;
-    this.notify();
-    return true;
-  }
-
   private notify() {
     this.listeners.forEach((fn) => fn([...this.listings]));
+  }
+
+  /**
+   * Fetches real active listings from the Ethereum Sepolia blockchain
+   */
+  public async refreshListingsFromContract() {
+    if (this.isRefreshing) return;
+    this.isRefreshing = true;
+
+    try {
+      const currentBlock = await publicClient.getBlockNumber();
+      const fromBlock = currentBlock > BigInt(10000) ? currentBlock - BigInt(10000) : BigInt(0);
+
+      const logs = await publicClient.getLogs({
+        address: marketplaceContractConfig.address,
+        fromBlock,
+        toBlock: "latest"
+      });
+
+      const tokenSet = new Set<bigint>();
+      for (const log of logs) {
+        try {
+          const decoded = decodeEventLog({
+            abi: marketplaceContractConfig.abi,
+            data: log.data,
+            topics: log.topics
+          });
+
+          if (decoded.eventName === "ItemListed") {
+            tokenSet.add((decoded.args as any).tokenId);
+          }
+        } catch {
+          // ignore non-matching logs
+        }
+      }
+
+      const activeListings: MarketplaceListing[] = [];
+
+      for (const tokenId of tokenSet) {
+        try {
+          const listingData = (await publicClient.readContract({
+            ...marketplaceContractConfig,
+            functionName: "getListing",
+            args: [tokenId]
+          })) as any;
+
+          if (listingData && listingData.isActive) {
+            // Verify current NFT owner
+            const currentOwner = (await publicClient.readContract({
+              ...cardContractConfig,
+              functionName: "ownerOf",
+              args: [tokenId]
+            })) as string;
+
+            if (currentOwner.toLowerCase() === listingData.seller.toLowerCase()) {
+              // Fetch Card Metadata from contract
+              const onChainCard = (await publicClient.readContract({
+                ...cardContractConfig,
+                functionName: "getCard",
+                args: [tokenId]
+              })) as any;
+
+              const assetSymbol = (onChainCard.assetSymbol || "BTC") as AssetSymbol;
+              const template = BASE_CARD_CATALOG.find((c) => c.assetSymbol === assetSymbol) || BASE_CARD_CATALOG[0];
+
+              const card: Card = {
+                ...template,
+                id: `card-onchain-${tokenId.toString()}`,
+                tokenId: Number(tokenId),
+                assetSymbol,
+                rarity: RARITY_MAP[onChainCard.rarity] || "Common",
+                foilType: FOIL_MAP[onChainCard.foilType] || "Standard",
+                baseAtk: Number(onChainCard.baseAtk || 60),
+                baseDef: Number(onChainCard.baseDef || 60),
+                baseSpd: Number(onChainCard.baseSpd || 60),
+                currentAtk: Number(onChainCard.baseAtk || 60),
+                currentDef: Number(onChainCard.baseDef || 60),
+                currentSpd: Number(onChainCard.baseSpd || 60),
+                statMultiplier: 1.0,
+                deltaPercent: 0,
+                trend: "neutral",
+                mintedAt: Number(onChainCard.mintedAt) * 1000 || Date.now(),
+                owner: listingData.seller
+              };
+
+              activeListings.push({
+                id: `list-${tokenId.toString()}`,
+                card,
+                seller: listingData.seller,
+                priceEth: parseFloat(formatEther(listingData.price)),
+                listedAt: Number(listingData.listedAt) * 1000,
+                isActive: true
+              });
+            }
+          }
+        } catch (e) {
+          console.warn("Listing check error for token:", tokenId, e);
+        }
+      }
+
+      this.listings = activeListings;
+      this.notify();
+    } catch (err) {
+      console.warn("Failed to fetch on-chain listings:", err);
+    } finally {
+      this.isRefreshing = false;
+    }
+  }
+
+  /**
+   * Lists an on-chain card for sale: Validates on-chain ownership, checks approval, & calls listCard
+   */
+  public async listCardOnChain(
+    tokenId: number,
+    priceEth: number,
+    sellerAddress: `0x${string}`
+  ): Promise<string> {
+    const isSepolia = await ensureSepoliaNetwork();
+    if (!isSepolia) {
+      throw new Error("Please switch your wallet to Ethereum Sepolia.");
+    }
+
+    const walletClient = await getBrowserWalletClient();
+    if (!walletClient) {
+      throw new Error("No Web3 wallet found.");
+    }
+
+    const priceWei = parseEther(priceEth.toString());
+    const tokenBigInt = BigInt(tokenId);
+
+    // 1. Verify on-chain ownership before sending transaction
+    try {
+      const onChainOwner = (await publicClient.readContract({
+        ...cardContractConfig,
+        functionName: "ownerOf",
+        args: [tokenBigInt]
+      })) as string;
+
+      if (onChainOwner.toLowerCase() !== sellerAddress.toLowerCase()) {
+        throw new Error(
+          `Your connected wallet (${sellerAddress.slice(0, 6)}...${sellerAddress.slice(-4)}) does not own Token #${tokenId} on Ethereum Sepolia. (On-chain owner: ${onChainOwner.slice(0, 6)}...${onChainOwner.slice(-4)}). You can only list cards that were minted directly to your wallet.`
+        );
+      }
+    } catch (err: any) {
+      if (err?.message?.includes("Your connected wallet")) {
+        throw err;
+      }
+      throw new Error(
+        `Card #${tokenId} does not exist on-chain on Ethereum Sepolia yet! Starter cards are for local battle practice; please open a Booster Pack in the Pack Store to mint your real on-chain NFT cards first.`
+      );
+    }
+
+    // 2. Check if marketplace is already approved (MarketWarsCard automatically approves marketplace contract)
+    const isApproved = (await publicClient.readContract({
+      ...cardContractConfig,
+      functionName: "isApprovedForAll",
+      args: [sellerAddress, marketplaceContractConfig.address]
+    })) as boolean;
+
+    if (!isApproved) {
+      const approveHash = await (walletClient as any).writeContract({
+        ...cardContractConfig,
+        functionName: "approve",
+        args: [marketplaceContractConfig.address, tokenBigInt],
+        account: sellerAddress,
+        chain: sepolia,
+        gas: BigInt(100_000)
+      });
+      await publicClient.waitForTransactionReceipt({ hash: approveHash });
+    }
+
+    // 3. Call listCard on marketplace contract with explicit safe gas limit
+    const listHash = await (walletClient as any).writeContract({
+      ...marketplaceContractConfig,
+      functionName: "listCard",
+      args: [tokenBigInt, priceWei],
+      account: sellerAddress,
+      chain: sepolia,
+      gas: BigInt(200_000)
+    });
+
+    await publicClient.waitForTransactionReceipt({ hash: listHash });
+    await this.refreshListingsFromContract();
+    return listHash;
+  }
+
+  /**
+   * Purchases a card on-chain: Sends ETH payment, transfers NFT, routes 2.5% fee to prize pool
+   */
+  public async buyCardOnChain(
+    tokenId: number,
+    priceEth: number,
+    buyerAddress: `0x${string}`
+  ): Promise<string> {
+    const isSepolia = await ensureSepoliaNetwork();
+    if (!isSepolia) {
+      throw new Error("Please switch your wallet to Ethereum Sepolia.");
+    }
+
+    const walletClient = await getBrowserWalletClient();
+    if (!walletClient) {
+      throw new Error("No Web3 wallet found.");
+    }
+
+    const priceWei = parseEther(priceEth.toString());
+    const tokenBigInt = BigInt(tokenId);
+
+    const buyHash = await (walletClient as any).writeContract({
+      ...marketplaceContractConfig,
+      functionName: "buyCard",
+      args: [tokenBigInt],
+      value: priceWei,
+      account: buyerAddress,
+      chain: sepolia,
+      gas: BigInt(300_000)
+    });
+
+    await publicClient.waitForTransactionReceipt({ hash: buyHash });
+    await this.refreshListingsFromContract();
+    return buyHash;
+  }
+
+  /**
+   * Cancels an active listing on-chain
+   */
+  public async cancelListingOnChain(tokenId: number, sellerAddress: `0x${string}`): Promise<string> {
+    const isSepolia = await ensureSepoliaNetwork();
+    if (!isSepolia) {
+      throw new Error("Please switch your wallet to Ethereum Sepolia.");
+    }
+
+    const walletClient = await getBrowserWalletClient();
+    if (!walletClient) {
+      throw new Error("No Web3 wallet found.");
+    }
+
+    const cancelHash = await (walletClient as any).writeContract({
+      ...marketplaceContractConfig,
+      functionName: "cancelListing",
+      args: [BigInt(tokenId)],
+      account: sellerAddress,
+      chain: sepolia,
+      gas: BigInt(150_000)
+    });
+
+    await publicClient.waitForTransactionReceipt({ hash: cancelHash });
+    await this.refreshListingsFromContract();
+    return cancelHash;
   }
 }
 

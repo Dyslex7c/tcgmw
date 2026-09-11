@@ -65,6 +65,54 @@ export const MarketWarsCardABI = [
     "inputs": [],
     "outputs": [{ "name": "", "type": "uint256" }],
     "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "isApprovedForAll",
+    "inputs": [
+      { "name": "tokenOwner", "type": "address" },
+      { "name": "operator", "type": "address" }
+    ],
+    "outputs": [{ "name": "", "type": "bool" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "Transfer",
+    "inputs": [
+      { "name": "from", "type": "address", "indexed": true },
+      { "name": "to", "type": "address", "indexed": true },
+      { "name": "tokenId", "type": "uint256", "indexed": true }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "Approval",
+    "inputs": [
+      { "name": "owner", "type": "address", "indexed": true },
+      { "name": "approved", "type": "address", "indexed": true },
+      { "name": "tokenId", "type": "uint256", "indexed": true }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "ApprovalForAll",
+    "inputs": [
+      { "name": "owner", "type": "address", "indexed": true },
+      { "name": "operator", "type": "address", "indexed": true },
+      { "name": "approved", "type": "bool", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "CardMinted",
+    "inputs": [
+      { "name": "tokenId", "type": "uint256", "indexed": true },
+      { "name": "to", "type": "address", "indexed": true },
+      { "name": "assetSymbol", "type": "string", "indexed": false },
+      { "name": "rarity", "type": "uint8", "indexed": false },
+      { "name": "foilType", "type": "uint8", "indexed": false }
+    ]
   }
 ] as const;
 
@@ -89,13 +137,33 @@ export const MarketWarsPackVRFABI = [
           { "name": "tier", "type": "uint8" },
           { "name": "timestamp", "type": "uint64" },
           { "name": "blockNumber", "type": "uint64" },
-          { "name": "fulfilled", "bool": true },
+          { "name": "fulfilled", "type": "bool" },
           { "name": "randomSeed", "type": "uint256" },
           { "name": "mintedTokenIds", "type": "uint256[]" }
         ]
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "PackPurchased",
+    "inputs": [
+      { "name": "requestId", "type": "uint256", "indexed": true },
+      { "name": "buyer", "type": "address", "indexed": true },
+      { "name": "tier", "type": "uint8", "indexed": false },
+      { "name": "price", "type": "uint256", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "PackFulfilled",
+    "inputs": [
+      { "name": "requestId", "type": "uint256", "indexed": true },
+      { "name": "buyer", "type": "address", "indexed": true },
+      { "name": "randomSeed", "type": "uint256", "indexed": false },
+      { "name": "tokenIds", "type": "uint256[]", "indexed": false }
+    ]
   }
 ] as const;
 
@@ -142,6 +210,35 @@ export const MarketWarsMarketplaceABI = [
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "ItemListed",
+    "inputs": [
+      { "name": "tokenId", "type": "uint256", "indexed": true },
+      { "name": "seller", "type": "address", "indexed": true },
+      { "name": "price", "type": "uint256", "indexed": false },
+      { "name": "timestamp", "type": "uint64", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "ItemSold",
+    "inputs": [
+      { "name": "tokenId", "type": "uint256", "indexed": true },
+      { "name": "seller", "type": "address", "indexed": true },
+      { "name": "buyer", "type": "address", "indexed": true },
+      { "name": "price", "type": "uint256", "indexed": false },
+      { "name": "fee", "type": "uint256", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "ListingCancelled",
+    "inputs": [
+      { "name": "tokenId", "type": "uint256", "indexed": true },
+      { "name": "seller", "type": "address", "indexed": true }
+    ]
   }
 ] as const;
 
@@ -185,5 +282,34 @@ export const MarketWarsPrizePoolABI = [
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "InflowReceived",
+    "inputs": [
+      { "name": "contributor", "type": "address", "indexed": true },
+      { "name": "amount", "type": "uint256", "indexed": false },
+      { "name": "source", "type": "string", "indexed": false },
+      { "name": "season", "type": "uint256", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "SeasonRolled",
+    "inputs": [
+      { "name": "oldSeason", "type": "uint256", "indexed": false },
+      { "name": "newSeason", "type": "uint256", "indexed": false },
+      { "name": "distributedAmount", "type": "uint256", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "PrizeDistributed",
+    "inputs": [
+      { "name": "season", "type": "uint256", "indexed": true },
+      { "name": "winner", "type": "address", "indexed": true },
+      { "name": "rank", "type": "uint256", "indexed": false },
+      { "name": "amount", "type": "uint256", "indexed": false }
+    ]
   }
 ] as const;

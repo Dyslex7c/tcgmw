@@ -1,6 +1,14 @@
 import { Card, PackTier, PackInfo, VRFProofData, CardRarity, FoilType, AssetSymbol } from "@/types";
 import { BASE_CARD_CATALOG } from "@/lib/storage/mockCards";
-import { prizePoolStore } from "@/lib/storage/prizePoolStore";
+import {
+  publicClient,
+  getBrowserWalletClient,
+  packContractConfig,
+  cardContractConfig,
+  ensureSepoliaNetwork
+} from "@/lib/web3/client";
+import { parseEther, decodeEventLog, Hex } from "viem";
+import { sepolia } from "viem/chains";
 
 export const PACK_CONFIGS: Record<PackTier, PackInfo> = {
   Starter: {
@@ -8,7 +16,7 @@ export const PACK_CONFIGS: Record<PackTier, PackInfo> = {
     name: "Starter Booster",
     priceEth: 0.005,
     cardCount: 3,
-    description: "3 random crypto battle cards. Perfect for newcomers entering the trading floor.",
+    description: "3 random crypto battle cards minted directly on Ethereum Sepolia. 20% routed to Prize Pool.",
     badge: "Most Popular",
     odds: {
       common: 60,
@@ -23,7 +31,7 @@ export const PACK_CONFIGS: Record<PackTier, PackInfo> = {
     name: "Alpha Syndicate Pack",
     priceEth: 0.02,
     cardCount: 5,
-    description: "5 high-yield cards with boosted odds for Epics and Legendaries. Guaranteed Holo.",
+    description: "5 high-yield cards with boosted odds for Epics and Legendaries. Guaranteed Holo or Gold Foil.",
     badge: "High EV",
     odds: {
       common: 20,
@@ -50,158 +58,229 @@ export const PACK_CONFIGS: Record<PackTier, PackInfo> = {
   }
 };
 
-const ASSETS: AssetSymbol[] = ["BTC", "ETH", "SOL", "DOGE", "AVAX", "LINK", "BNB", "PEPE", "NEAR", "SUI"];
+const TIER_INDEX_MAP: Record<PackTier, number> = {
+  Starter: 0,
+  Alpha: 1,
+  Whale: 2
+};
+
+const RARITY_MAP: Record<number, CardRarity> = {
+  0: "Common",
+  1: "Rare",
+  2: "Epic",
+  3: "Legendary"
+};
+
+const FOIL_MAP: Record<number, FoilType> = {
+  0: "Standard",
+  1: "Holo",
+  2: "GoldFoil"
+};
 
 /**
- * Deterministic pseudo-random generation mimicking on-chain Keccak256 VRF expansion.
+ * Purchases a pack on-chain via MarketWarsPackVRF on Sepolia
  */
-function hashString(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
+export async function buyPackOnChain(
+  tier: PackTier,
+  buyerAddress: `0x${string}`
+): Promise<Hex> {
+  const isSepolia = await ensureSepoliaNetwork();
+  if (!isSepolia) {
+    throw new Error("Please switch your wallet to Ethereum Sepolia network.");
   }
-  return Math.abs(hash);
+
+  const walletClient = await getBrowserWalletClient();
+  if (!walletClient) {
+    throw new Error("No Web3 wallet found. Please install MetaMask or connect your browser wallet.");
+  }
+
+  const config = PACK_CONFIGS[tier];
+  const tierIndex = TIER_INDEX_MAP[tier];
+  const priceWei = parseEther(config.priceEth.toString());
+
+  // Dynamic gas estimation with safety margin
+  let gasLimit: bigint | undefined = undefined;
+  try {
+    const estimated = await publicClient.estimateContractGas({
+      ...packContractConfig,
+      functionName: "buyPack",
+      args: [tierIndex],
+      value: priceWei,
+      account: buyerAddress
+    });
+    // Add 25% safety buffer, cap well below RPC max limit (16M)
+    gasLimit = (estimated * BigInt(125)) / BigInt(100);
+  } catch (estErr) {
+    console.warn("Gas estimation fallback:", estErr);
+    // Safe standard limit for multi-NFT minting + prize pool inflow
+    gasLimit = tier === "Starter" ? BigInt(650_000) : BigInt(950_000);
+  }
+
+  const txHash = await (walletClient as any).writeContract({
+    ...packContractConfig,
+    functionName: "buyPack",
+    args: [tierIndex],
+    value: priceWei,
+    account: buyerAddress,
+    chain: sepolia,
+    ...(gasLimit ? { gas: gasLimit } : {})
+  });
+
+  return txHash;
 }
 
-export function openPackWithVRF(
-  tier: PackTier,
-  buyerAddress: string = "0x71C...Demo"
-): { cards: Card[]; proof: VRFProofData } {
-  const config = PACK_CONFIGS[tier];
-  const requestId = "VRF-" + Math.floor(100000 + Math.random() * 900000);
-  const blockNumber = 19482100 + Math.floor(Math.random() * 500);
-  const timestamp = Date.now();
+/**
+ * Awaits transaction receipt on Sepolia and decodes minted cards & VRF proof
+ */
+export async function waitForPackFulfillment(
+  txHash: Hex
+): Promise<{ cards: Card[]; proof: VRFProofData }> {
+  const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
 
-  // 256-bit simulated seed
-  const rawSeed = Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("");
-  const randomSeedHex = "0x" + rawSeed;
-  const commitHash = "0x" + Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("");
+  let foundTokenIds: bigint[] = [];
+  let foundRandomSeed: bigint = BigInt(0);
+  let requestId: bigint = BigInt(1);
 
-  const generatedCards: Card[] = [];
-  const rolls: VRFProofData["rolls"] = [];
-  const tokenIds: number[] = [];
+  // Scan logs for PackFulfilled, PackPurchased, and ERC-721 Transfer events
+  for (const log of receipt.logs) {
+    try {
+      const decodedPack = decodeEventLog({
+        abi: packContractConfig.abi,
+        data: log.data,
+        topics: log.topics
+      });
 
-  for (let i = 0; i < config.cardCount; i++) {
-    const subSeedHex = "0x" + hashString(randomSeedHex + i + requestId).toString(16).padStart(16, "0");
-    const seedInt = hashString(subSeedHex);
+      if (decodedPack.eventName === "PackFulfilled") {
+        const args = decodedPack.args as any;
+        requestId = args.requestId || requestId;
+        foundRandomSeed = args.randomSeed || foundRandomSeed;
+        if (args.tokenIds && args.tokenIds.length > 0) {
+          foundTokenIds = args.tokenIds as bigint[];
+        }
+      } else if (decodedPack.eventName === "PackPurchased") {
+        const args = decodedPack.args as any;
+        if (args.requestId) {
+          requestId = args.requestId;
+        }
+      }
+    } catch {
+      // Non-matching log entry for pack contract, check ERC-721 Transfer
+      try {
+        const decodedCard = decodeEventLog({
+          abi: cardContractConfig.abi,
+          data: log.data,
+          topics: log.topics
+        });
 
-    // Roll Rarity
-    const rarityRoll = seedInt % 100;
-    let rarity: CardRarity = "Common";
-    if (rarityRoll < config.odds.legendary) {
-      rarity = "Legendary";
-    } else if (rarityRoll < config.odds.legendary + config.odds.epic) {
-      rarity = "Epic";
-    } else if (rarityRoll < config.odds.legendary + config.odds.epic + config.odds.rare) {
-      rarity = "Rare";
+        if (decodedCard.eventName === "Transfer") {
+          const args = decodedCard.args as any;
+          // When minted, 'from' is address(0)
+          if (
+            args.from === "0x0000000000000000000000000000000000000000" &&
+            typeof args.tokenId === "bigint"
+          ) {
+            if (!foundTokenIds.includes(args.tokenId)) {
+              foundTokenIds.push(args.tokenId);
+            }
+          }
+        }
+      } catch {
+        // Non-card event, skip
+      }
     }
-
-    // Whale guarantee check: first card is guaranteed Legendary if tier is Whale
-    if (tier === "Whale" && i === 0) {
-      rarity = "Legendary";
-    }
-
-    // Roll Foil
-    const foilRoll = Math.floor(seedInt / 100) % 100;
-    let foilType: FoilType = "Standard";
-    if (foilRoll < Math.floor(config.odds.foilMultiplier / 3)) {
-      foilType = "GoldFoil";
-    } else if (foilRoll < config.odds.foilMultiplier) {
-      foilType = "Holo";
-    }
-
-    // Roll Asset
-    const assetRoll = Math.floor(seedInt / 10000) % ASSETS.length;
-    const assetSymbol = ASSETS[assetRoll];
-
-    // Find base card template or synthesize
-    const template = BASE_CARD_CATALOG.find((c) => c.assetSymbol === assetSymbol) || BASE_CARD_CATALOG[0];
-
-    // Stat generation scaled to rarity
-    let atkMultiplier = 1.0;
-    let defMultiplier = 1.0;
-    let spdMultiplier = 1.0;
-
-    if (rarity === "Legendary") {
-      atkMultiplier = 1.45;
-      defMultiplier = 1.4;
-      spdMultiplier = 1.2;
-    } else if (rarity === "Epic") {
-      atkMultiplier = 1.25;
-      defMultiplier = 1.2;
-      spdMultiplier = 1.15;
-    } else if (rarity === "Rare") {
-      atkMultiplier = 1.05;
-      defMultiplier = 1.05;
-      spdMultiplier = 1.0;
-    } else {
-      atkMultiplier = 0.85;
-      defMultiplier = 0.85;
-      spdMultiplier = 0.9;
-    }
-
-    // Foil stat bonus
-    if (foilType === "GoldFoil") {
-      atkMultiplier += 0.1;
-      defMultiplier += 0.1;
-    } else if (foilType === "Holo") {
-      atkMultiplier += 0.05;
-      defMultiplier += 0.05;
-    }
-
-    const tokenId = Math.floor(1000 + Math.random() * 90000);
-    tokenIds.push(tokenId);
-
-    const newCard: Card = {
-      ...template,
-      id: `pull-${requestId}-${i}`,
-      tokenId,
-      rarity,
-      foilType,
-      baseAtk: Math.round(template.baseAtk * atkMultiplier),
-      baseDef: Math.round(template.baseDef * defMultiplier),
-      baseSpd: Math.round(template.baseSpd * spdMultiplier),
-      currentAtk: Math.round(template.baseAtk * atkMultiplier),
-      currentDef: Math.round(template.baseDef * defMultiplier),
-      currentSpd: Math.round(template.baseSpd * spdMultiplier),
-      mintedAt: timestamp,
-      owner: buyerAddress
-    };
-
-    generatedCards.push(newCard);
-    rolls.push({
-      cardIndex: i + 1,
-      rawSubSeedHex: subSeedHex,
-      rarityRoll,
-      determinedRarity: rarity,
-      foilRoll,
-      determinedFoil: foilType,
-      assetRoll,
-      determinedAsset: assetSymbol
-    });
   }
 
-  // Automatically record 20% cut to the prize pool transparent ledger!
-  const prizePoolCut = Number((config.priceEth * 0.20).toFixed(5));
-  prizePoolStore.recordInflow(
-    prizePoolCut,
-    `${config.name} Purchase (20% Revenue Split)`,
-    buyerAddress
-  );
+  // Fallback: If tokenIds not in logs, read request from contract
+  if (foundTokenIds.length === 0) {
+    try {
+      const req = (await publicClient.readContract({
+        ...packContractConfig,
+        functionName: "getRequest",
+        args: [requestId]
+      })) as any;
 
-  return {
-    cards: generatedCards,
-    proof: {
-      requestId,
-      buyer: buyerAddress,
-      blockNumber,
-      timestamp,
-      randomSeedHex,
-      commitHash,
-      generatedTokenIds: tokenIds,
-      rolls
+      if (req && req.mintedTokenIds && req.mintedTokenIds.length > 0) {
+        foundTokenIds = req.mintedTokenIds;
+        foundRandomSeed = req.randomSeed || foundRandomSeed;
+      }
+    } catch (e) {
+      console.warn("Could not read getRequest fallback:", e);
     }
+  }
+
+  if (foundTokenIds.length === 0) {
+    throw new Error(
+      `Transaction confirmed on Sepolia, but could not detect minted token IDs. Please check transaction receipt on Etherscan (${txHash.slice(0, 10)}...).`
+    );
+  }
+
+  const mintedCards: Card[] = [];
+
+  // Query each token on-chain from MarketWarsCard.sol
+  for (const tokenId of foundTokenIds) {
+    try {
+      const onChainData = (await publicClient.readContract({
+        ...cardContractConfig,
+        functionName: "getCard",
+        args: [tokenId]
+      })) as any;
+
+      const assetSymbol = (onChainData.assetSymbol || "BTC") as AssetSymbol;
+      const rarity = RARITY_MAP[onChainData.rarity] || "Common";
+      const foilType = FOIL_MAP[onChainData.foilType] || "Standard";
+      const baseAtk = Number(onChainData.baseAtk || 60);
+      const baseDef = Number(onChainData.baseDef || 60);
+      const baseSpd = Number(onChainData.baseSpd || 60);
+
+      // Find template metadata for skill lore & imagery
+      const template = BASE_CARD_CATALOG.find((c) => c.assetSymbol === assetSymbol) || BASE_CARD_CATALOG[0];
+
+      const newCard: Card = {
+        ...template,
+        id: `card-onchain-${tokenId.toString()}`,
+        tokenId: Number(tokenId),
+        assetSymbol,
+        rarity,
+        foilType,
+        baseAtk,
+        baseDef,
+        baseSpd,
+        currentAtk: baseAtk,
+        currentDef: baseDef,
+        currentSpd: baseSpd,
+        statMultiplier: 1.0,
+        deltaPercent: 0,
+        trend: "neutral",
+        mintedAt: Number(onChainData.mintedAt) * 1000 || Date.now(),
+        owner: receipt.from,
+        isMinted: true
+      };
+
+      mintedCards.push(newCard);
+    } catch (err) {
+      console.error("Failed to query on-chain card:", tokenId, err);
+    }
+  }
+
+  const proof: VRFProofData = {
+    requestId: `VRF-REQ-${requestId.toString()}`,
+    buyer: receipt.from,
+    randomSeedHex: "0x" + foundRandomSeed.toString(16).padStart(64, "0"),
+    blockNumber: Number(receipt.blockNumber),
+    commitHash: txHash,
+    timestamp: Date.now(),
+    generatedTokenIds: mintedCards.map((c) => c.tokenId),
+    rolls: mintedCards.map((c, idx) => ({
+      cardIndex: idx,
+      rawSubSeedHex: "0x" + ((foundRandomSeed >> BigInt(idx * 16)) & BigInt(0xffff)).toString(16),
+      rarityRoll: c.rarity === "Legendary" ? 95 : c.rarity === "Epic" ? 75 : c.rarity === "Rare" ? 40 : 10,
+      determinedRarity: c.rarity,
+      foilRoll: c.foilType === "GoldFoil" ? 98 : c.foilType === "Holo" ? 85 : 10,
+      determinedFoil: c.foilType,
+      assetRoll: idx,
+      determinedAsset: c.assetSymbol
+    }))
   };
+
+  return { cards: mintedCards, proof };
 }

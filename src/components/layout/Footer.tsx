@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { sound } from "@/lib/audio/soundEngine";
 import { getChainLogoUrl } from "@/lib/constants/chainLogos";
 import {
@@ -56,7 +57,7 @@ export function Footer({ onOpenSimulator }: FooterProps) {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
               </span>
-              <span>MARKETWARS COMBAT PROTOCOL ACTIVE</span>
+              <span>AVOX // MARKETWARS COMBAT PROTOCOL ACTIVE</span>
             </span>
             <span className="text-slate-600 hidden sm:inline">•</span>
             <span className="text-slate-400 font-inconsolata hidden sm:inline">
@@ -93,17 +94,26 @@ export function Footer({ onOpenSimulator }: FooterProps) {
             <Link
               href="/"
               onClick={() => sound.playClick()}
-              className="flex items-center space-x-2.5 group w-fit"
+              className="flex items-center space-x-3 group w-fit"
             >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 via-red-600 to-rose-700 p-0.5 flex items-center justify-center shadow-[0_0_20px_rgba(220,38,38,0.35)] group-hover:scale-105 transition-transform">
-                <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                  <Swords className="w-5 h-5 text-orange-400" />
-                </div>
+              <div className="relative w-10 h-10 rounded-xl bg-[#090D15] p-1 border border-orange-500/40 shadow-[0_0_18px_rgba(234,88,12,0.4)] group-hover:shadow-[0_0_28px_rgba(234,88,12,0.65)] group-hover:border-orange-400 transition-all duration-300 flex items-center justify-center overflow-hidden shrink-0">
+                <Image
+                  src="/logo.png"
+                  alt="AVOX MarketWars"
+                  width={36}
+                  height={36}
+                  className="w-8 h-8 object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_8px_rgba(249,115,22,0.6)]"
+                />
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl sm:text-3xl font-bold font-silkscreen tracking-wide text-slate-100 uppercase leading-none">
-                  MARKETWARS
-                </span>
+                <div className="flex items-center space-x-1.5">
+                  <span className="text-2xl sm:text-3xl font-bold font-silkscreen tracking-wide text-slate-100 uppercase leading-none">
+                    MARKET<span className="text-red-500">WARS</span>
+                  </span>
+                  <span className="text-[10px] font-chakra font-bold px-1.5 py-0.5 rounded bg-orange-950/80 text-orange-400 border border-orange-500/40 uppercase tracking-wider">
+                    AVOX
+                  </span>
+                </div>
                 <span className="text-[10px] font-chakra font-bold text-orange-400 tracking-widest uppercase">
                   Tactical PvP Crypto TCG
                 </span>
@@ -121,6 +131,8 @@ export function Footer({ onOpenSimulator }: FooterProps) {
                 Deployment Networks:
               </div>
               <div className="flex flex-wrap items-center gap-2 text-slate-400 font-inconsolata">
+                <span className="text-orange-400 font-bold">Sepolia #11155111</span>
+                <span className="text-slate-600">•</span>
                 <span>Base Sepolia #84532</span>
                 <span className="text-slate-600">•</span>
                 <span>Arbitrum Sepolia #421614</span>
@@ -268,7 +280,7 @@ export function Footer({ onOpenSimulator }: FooterProps) {
         {/* Bottom Sub-Footer: Copyright, Badges & Legal Disclaimer */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-hanken text-slate-500">
           <div className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-3 text-center sm:text-left">
-            <span>&copy; 2026 MarketWars Protocol. All rights reserved.</span>
+            <span>&copy; 2026 AVOX MarketWars Protocol. All rights reserved.</span>
             <span className="hidden sm:inline text-slate-700">•</span>
             <span className="font-chakra text-[11px] text-slate-400">
               Verifiable Decentralized Card Battler

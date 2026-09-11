@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 import { BattleState, BattleCard, Card, AssetSymbol, LivePriceData, OpponentProfile, StatusEffect, BattleLogEntry } from "@/types";
 import {
   createInitialBattle,
@@ -683,16 +684,23 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-3 bg-[#060912] p-2.5 rounded-xl border border-slate-800 text-xs font-mono">
                 <div className="text-right pr-3 border-r border-slate-800">
-                  <div className="text-[10px] text-slate-500 uppercase">Your Rating</div>
-                  <div className="font-bold text-cyan-400">{profile.ratingMMR} MMR</div>
+                  <div className="text-[10px] text-slate-500 uppercase">AVOX Vault</div>
+                  <div className="font-bold text-orange-400 flex items-center justify-end space-x-1">
+                    <Image src="/logo.png" alt="AVOX" width={13} height={13} className="w-3.5 h-3.5 object-contain" />
+                    <span>{profile.avoxBalance ?? 100} AVOX</span>
+                  </div>
                 </div>
                 <div className="text-right pr-3 border-r border-slate-800">
-                  <div className="text-[10px] text-slate-500 uppercase">Rank Tier</div>
-                  <div className="font-bold text-amber-400">{profile.rankTier}</div>
+                  <div className="text-[10px] text-slate-500 uppercase">Rating</div>
+                  <div className="font-bold text-slate-200">{profile.ratingMMR} MMR</div>
+                </div>
+                <div className="text-right pr-3 border-r border-slate-800">
+                  <div className="text-[10px] text-slate-500 uppercase">Rank</div>
+                  <div className="font-bold text-slate-300">{profile.rankTier}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[10px] text-slate-500 uppercase">Combat Record</div>
-                  <div className="font-bold text-emerald-400">{profile.wins}W / {profile.losses}L</div>
+                  <div className="text-[10px] text-slate-500 uppercase">Record</div>
+                  <div className="font-bold text-slate-300">{profile.wins}W / {profile.losses}L</div>
                 </div>
               </div>
 
@@ -712,14 +720,14 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
           {/* Mode Select Dual Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* CARD 1: P2P Live Matchmaking */}
-            <div className="p-6 sm:p-7 rounded-2xl bg-gradient-to-b from-[#160B18]/90 to-[#0A0D15] border-2 border-orange-500/40 hover:border-orange-500 transition-all shadow-[0_0_35px_rgba(234,88,12,0.15)] flex flex-col justify-between space-y-5">
+            <div className="p-6 sm:p-7 rounded-2xl bg-[#0B0F19] border border-slate-800 hover:border-orange-500/50 transition-all flex flex-col justify-between space-y-5">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="inline-flex items-center space-x-2 text-xs font-chakra font-bold text-orange-400 uppercase tracking-wider px-2.5 py-1 rounded bg-orange-950/60 border border-orange-500/40">
-                    <Radio className="w-3.5 h-3.5 text-orange-400 animate-pulse" />
+                  <div className="inline-flex items-center space-x-2 text-xs font-chakra font-bold text-orange-400 uppercase tracking-wider px-2.5 py-1 rounded bg-orange-950/40 border border-orange-500/30">
+                    <Radio className="w-3.5 h-3.5 text-orange-400" />
                     <span>PROTOCOL: RANKED QUEUE</span>
                   </div>
-                  <span className="text-[11px] font-mono text-amber-400 bg-amber-950/50 px-2 py-0.5 rounded border border-amber-500/30">
+                  <span className="text-[11px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
                     5s Auto-Bot Fallback
                   </span>
                 </div>
@@ -727,45 +735,45 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
                 <h2 className="text-xl sm:text-2xl font-silkscreen font-bold text-slate-100 uppercase tracking-wide">
                   Find Live Trader
                 </h2>
-                <p className="text-xs text-slate-300 font-hanken leading-relaxed">
+                <p className="text-xs text-slate-400 font-hanken leading-relaxed">
                   Broadcast your challenge across on-chain peer channels. If no human trader accepts within 5 seconds, an adaptive market AI bot seamlessly connects so you never wait.
                 </p>
 
-                <div className="p-3.5 rounded-xl bg-[#060810]/80 border border-slate-800 text-xs font-mono space-y-1.5 text-slate-400">
+                <div className="p-3.5 rounded-xl bg-[#070A12] border border-slate-800/80 text-xs font-mono space-y-1.5 text-slate-400">
                   <div className="flex items-center justify-between">
                     <span>• Matchmaking Window:</span>
-                    <span className="text-slate-200">5.5s timeout</span>
+                    <span className="text-slate-300">5.5s timeout</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>• Multi-Tab P2P Discovery:</span>
-                    <span className="text-emerald-400 font-bold">READY</span>
+                    <span className="text-slate-300 font-semibold">READY</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>• Fallback Opponents:</span>
-                    <span className="text-orange-400 font-bold">5 High-IQ Trading Bots</span>
+                    <span className="text-orange-400 font-semibold">5 High-IQ Trading Bots</span>
                   </div>
                 </div>
               </div>
 
               <button
                 onClick={startSearch}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-orange-600 via-red-600 to-rose-600 hover:from-orange-500 hover:via-red-500 hover:to-rose-500 text-white font-chakra font-extrabold text-sm uppercase tracking-wider shadow-[0_0_25px_rgba(234,88,12,0.5)] border border-orange-400/40 transition-all hover:scale-[1.01] flex items-center justify-center space-x-2"
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-chakra font-bold text-sm uppercase tracking-wider shadow-[0_0_20px_rgba(234,88,12,0.3)] border border-orange-500/40 transition-all flex items-center justify-center space-x-2"
               >
-                <Radio className="w-4 h-4 animate-pulse" />
+                <Radio className="w-4 h-4" />
                 <span>Enter Matchmaking Radar</span>
                 <ChevronRight className="w-4 h-4 ml-1" />
               </button>
             </div>
 
             {/* CARD 2: Instant Bot Combat */}
-            <div className="p-6 sm:p-7 rounded-2xl bg-gradient-to-b from-[#0B1526]/90 to-[#070B14] border-2 border-cyan-500/40 hover:border-cyan-400 transition-all shadow-[0_0_35px_rgba(6,182,212,0.12)] flex flex-col justify-between space-y-5">
+            <div className="p-6 sm:p-7 rounded-2xl bg-[#0B0F19] border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between space-y-5">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="inline-flex items-center space-x-2 text-xs font-chakra font-bold text-cyan-400 uppercase tracking-wider px-2.5 py-1 rounded bg-cyan-950/60 border border-cyan-500/40">
-                    <Bot className="w-3.5 h-3.5 text-cyan-400" />
+                  <div className="inline-flex items-center space-x-2 text-xs font-chakra font-bold text-slate-300 uppercase tracking-wider px-2.5 py-1 rounded bg-slate-900 border border-slate-700">
+                    <Bot className="w-3.5 h-3.5 text-slate-400" />
                     <span>PROTOCOL: DIRECT TRAINING</span>
                   </div>
-                  <span className="text-[11px] font-mono text-cyan-400 bg-cyan-950/50 px-2 py-0.5 rounded border border-cyan-500/30">
+                  <span className="text-[11px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
                     Zero Wait Time
                   </span>
                 </div>
@@ -773,7 +781,7 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
                 <h2 className="text-xl sm:text-2xl font-silkscreen font-bold text-slate-100 uppercase tracking-wide">
                   Battle Market AI Bot
                 </h2>
-                <p className="text-xs text-slate-300 font-hanken leading-relaxed">
+                <p className="text-xs text-slate-400 font-hanken leading-relaxed">
                   Select your automated adversary. 5 specialized algorithmic bots running distinct crypto deck archetypes, from high-volatility meme strikes to ironclad institutional defense.
                 </p>
 
@@ -790,8 +798,8 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
                         }}
                         className={`p-2.5 rounded-xl border text-left transition-all flex items-center space-x-2.5 ${
                           selectedBotId === bot.id
-                            ? "bg-cyan-950/80 border-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.3)] ring-1 ring-cyan-400"
-                            : "bg-[#091120] border-slate-800 hover:border-slate-700 text-slate-400"
+                            ? "bg-[#131B2B] border-slate-600 shadow-[0_0_10px_rgba(0,0,0,0.5)] ring-1 ring-slate-500"
+                            : "bg-[#080C16] border-slate-800/90 hover:border-slate-700 text-slate-400"
                         }`}
                       >
                         <span className="text-xl">{bot.avatar}</span>
@@ -799,7 +807,7 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
                           <div className="text-xs font-chakra font-bold text-slate-200 truncate">
                             {bot.name}
                           </div>
-                          <div className="text-[10px] font-mono text-cyan-400 truncate">
+                          <div className="text-[10px] font-mono text-slate-400 truncate">
                             MMR {bot.mmr} • {bot.archetype}
                           </div>
                         </div>
@@ -811,9 +819,9 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
 
               <button
                 onClick={() => startInstantBot(selectedBotId)}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 via-teal-600 to-emerald-600 hover:from-cyan-500 hover:via-teal-500 hover:to-emerald-500 text-white font-chakra font-extrabold text-sm uppercase tracking-wider shadow-[0_0_25px_rgba(6,182,212,0.4)] border border-cyan-400/40 transition-all hover:scale-[1.01] flex items-center justify-center space-x-2"
+                className="w-full py-3.5 rounded-xl bg-[#141C2B] hover:bg-[#1A2438] border border-slate-700 text-slate-200 font-chakra font-bold text-sm uppercase tracking-wider transition-all flex items-center justify-center space-x-2"
               >
-                <Bot className="w-4 h-4" />
+                <Bot className="w-4 h-4 text-slate-400" />
                 <span>Launch Instant Bot Match</span>
                 <ChevronRight className="w-4 h-4 ml-1" />
               </button>
@@ -861,42 +869,42 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
       {/* 2. SEARCHING RADAR VIEW */}
       {matchPhase === "searching" && (
         <div className="w-full max-w-2xl mx-auto py-8 space-y-8 animate-in zoom-in-95 duration-200">
-          <div className="p-8 rounded-3xl bg-[#080C16]/95 border border-orange-500/50 shadow-[0_0_60px_rgba(234,88,12,0.25)] text-center space-y-6 relative overflow-hidden backdrop-blur-xl">
-            {/* Glowing Corner Accents */}
-            <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-orange-400" />
-            <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-orange-400" />
-            <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-orange-400" />
-            <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-orange-400" />
+          <div className="p-8 rounded-3xl bg-[#080C16]/95 border border-slate-800 shadow-[0_0_30px_rgba(0,0,0,0.8)] text-center space-y-6 relative overflow-hidden backdrop-blur-xl">
+            {/* Corner Accents */}
+            <div className="absolute top-0 left-0 w-6 h-6 border-t border-l border-slate-600" />
+            <div className="absolute top-0 right-0 w-6 h-6 border-t border-r border-slate-600" />
+            <div className="absolute bottom-0 left-0 w-6 h-6 border-b border-l border-slate-600" />
+            <div className="absolute bottom-0 right-0 w-6 h-6 border-b border-r border-slate-600" />
 
             {/* Radar Circle */}
-            <div className="relative w-56 h-56 mx-auto flex items-center justify-center my-4">
+            <div className="relative w-52 h-52 mx-auto flex items-center justify-center my-4">
               {/* Outer Ring */}
-              <div className="absolute inset-0 rounded-full border border-orange-500/30 bg-[#04060C]" />
+              <div className="absolute inset-0 rounded-full border border-slate-800 bg-[#04060C]" />
               {/* Middle Ring */}
-              <div className="absolute inset-6 rounded-full border border-orange-500/20" />
+              <div className="absolute inset-6 rounded-full border border-slate-800/70" />
               {/* Inner Ring */}
-              <div className="absolute inset-16 rounded-full border border-orange-500/20" />
+              <div className="absolute inset-16 rounded-full border border-slate-800/50" />
               {/* Crosshair Horizontal */}
-              <div className="absolute w-full h-[1px] bg-orange-500/20" />
+              <div className="absolute w-full h-[1px] bg-slate-800" />
               {/* Crosshair Vertical */}
-              <div className="absolute h-full w-[1px] bg-orange-500/20" />
+              <div className="absolute h-full w-[1px] bg-slate-800" />
 
               {/* Sonar Ping Waves */}
-              <div className="absolute w-32 h-32 rounded-full border border-orange-500/60 bg-orange-500/10 animate-radar-sonar pointer-events-none" />
+              <div className="absolute w-32 h-32 rounded-full border border-orange-500/30 bg-orange-500/5 animate-radar-sonar pointer-events-none" />
 
               {/* Rotating Radar Sweep */}
               <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none animate-radar-sweep">
-                <div className="w-1/2 h-1/2 bg-gradient-to-br from-orange-500/40 via-red-500/20 to-transparent transform origin-bottom-right" />
+                <div className="w-1/2 h-1/2 bg-gradient-to-br from-orange-500/20 via-orange-500/5 to-transparent transform origin-bottom-right" />
               </div>
 
               {/* Center Beacon */}
-              <div className="relative z-10 w-4 h-4 rounded-full bg-orange-500 shadow-[0_0_15px_rgba(234,88,12,1)] animate-ping" />
-              <div className="absolute z-10 w-3 h-3 rounded-full bg-white shadow-[0_0_10px_white]" />
+              <div className="relative z-10 w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_10px_rgba(234,88,12,0.8)] animate-ping" />
+              <div className="absolute z-10 w-2.5 h-2.5 rounded-full bg-slate-100" />
             </div>
 
             {/* Radar Telemetry & Status Text */}
             <div className="space-y-2">
-              <div className="inline-flex items-center space-x-2 text-xs font-chakra font-bold text-orange-400 uppercase tracking-widest px-3 py-1 rounded-full bg-orange-950/60 border border-orange-500/40">
+              <div className="inline-flex items-center space-x-2 text-xs font-chakra font-bold text-orange-400 uppercase tracking-widest px-3 py-1 rounded-full bg-orange-950/40 border border-orange-500/30">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
@@ -908,25 +916,25 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
                 Scanning for Challenger
               </h2>
 
-              <p className="text-xs sm:text-sm text-slate-300 font-mono">
+              <p className="text-xs sm:text-sm text-slate-400 font-mono">
                 {searchStatus.message}
               </p>
             </div>
 
             {/* Telemetry Status Bar */}
-            <div className="bg-[#05070D] p-3 rounded-xl border border-slate-800 text-[11px] font-mono flex items-center justify-between text-slate-400 max-w-md mx-auto">
-              <span>Peers Scanned: <strong className="text-emerald-400">{searchStatus.peersScanned}</strong></span>
+            <div className="bg-[#05070D] p-3 rounded-xl border border-slate-800/80 text-[11px] font-mono flex items-center justify-between text-slate-400 max-w-md mx-auto">
+              <span>Peers Scanned: <strong className="text-slate-200">{searchStatus.peersScanned}</strong></span>
               <span>•</span>
-              <span>Protocol: <strong className="text-cyan-400">P2P Mesh + AI Fallback</strong></span>
+              <span>Protocol: <strong className="text-slate-300">P2P Mesh + AI Fallback</strong></span>
             </div>
 
             {/* Instant Bot Bypass & Cancel Buttons */}
             <div className="space-y-3 pt-2 max-w-md mx-auto">
               <button
                 onClick={() => startInstantBot()}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 hover:from-amber-500 hover:via-orange-500 hover:to-red-500 text-white font-chakra font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(245,158,11,0.4)] border border-amber-400/40 transition-all flex items-center justify-center space-x-2"
+                className="w-full py-3.5 rounded-xl bg-[#141C2B] hover:bg-[#1A2438] text-slate-200 font-chakra font-bold text-xs uppercase tracking-wider border border-slate-700 transition-all flex items-center justify-center space-x-2"
               >
-                <Zap className="w-4 h-4 text-amber-200 animate-bounce" />
+                <Zap className="w-4 h-4 text-orange-400" />
                 <span>Skip Wait: Fight AI Bot Immediately</span>
               </button>
 
@@ -1009,35 +1017,28 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
           {/* Top Banner: Arena Match Header, Speed Toggle & Controls */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 bg-[#0A0F19] px-3 py-1.5 rounded-xl border border-slate-800 shadow-[0_0_20px_rgba(0,0,0,0.5)] shrink-0">
             <div className="flex items-center space-x-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 via-red-600 to-rose-700 p-[1px] flex items-center justify-center shadow-[0_0_12px_rgba(234,88,12,0.4)] shrink-0">
-                <div className="w-full h-full bg-[#0B0F18] rounded-lg flex items-center justify-center">
-                  <Swords className="w-4 h-4 text-orange-400" />
-                </div>
+              <div className="w-8 h-8 rounded-lg bg-[#0E1422] border border-orange-500/30 flex items-center justify-center shrink-0">
+                <Image src="/logo.png" alt="AVOX" width={20} height={20} className="w-5 h-5 object-contain" />
               </div>
               <div className="flex items-center space-x-2 flex-wrap">
                 <h1 className="text-base sm:text-lg font-silkscreen font-bold text-slate-100 uppercase tracking-wide">
                   Live Tactical Arena
                 </h1>
-                <span className="text-[10px] font-chakra font-bold text-orange-400 px-2 py-0.5 rounded bg-orange-950/60 border border-orange-500/40">
+                <span className="text-[10px] font-chakra font-bold text-orange-400 px-2 py-0.5 rounded bg-orange-950/40 border border-orange-500/30">
                   ROUND {battleState.round}
                 </span>
+                <div className="flex items-center space-x-1 px-2 py-0.5 rounded bg-[#0D1322] border border-orange-500/30 text-[10px] font-mono font-bold text-orange-400">
+                  <Image src="/logo.png" alt="AVOX" width={12} height={12} className="w-3 h-3 object-contain" />
+                  <span>+50 AVOX Reward</span>
+                </div>
                 {comboCount > 1 && (
-                  <span className="text-[10px] font-mono font-bold text-amber-300 px-2 py-0.5 rounded bg-amber-950/80 border border-amber-500/50 flex items-center space-x-1 animate-pulse">
-                    <Flame className="w-3 h-3 text-amber-400" />
+                  <span className="text-[10px] font-mono font-bold text-slate-200 px-2 py-0.5 rounded bg-slate-900 border border-slate-700 flex items-center space-x-1">
+                    <Flame className="w-3 h-3 text-orange-400" />
                     <span>{comboCount}x COMBO</span>
                   </span>
                 )}
                 <span className="text-slate-600 text-xs hidden md:inline">•</span>
-                <span className="text-[11px] text-slate-400 hidden md:inline">Pyth Oracles active</span>
-                <a
-                  href={getExplorerAddressUrl(CONTRACT_CONFIG.cardContract)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-emerald-400 hover:text-emerald-300 items-center space-x-1 underline font-mono text-[10px] hidden lg:flex"
-                >
-                  <span>Contract Verified</span>
-                  <ExternalLink className="w-2.5 h-2.5" />
-                </a>
+                <span className="text-[11px] text-slate-400 hidden md:inline">Pyth Feeds Active</span>
               </div>
             </div>
 
@@ -1115,7 +1116,7 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
           {/* Floating Combat Event Banner */}
           {combatBanner && (
             <div className="w-full flex justify-center -my-1 z-30 pointer-events-none shrink-0">
-              <div className="py-1 px-5 rounded-full bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-white font-chakra font-extrabold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(234,88,12,0.8)] border border-amber-300/60 animate-bounce">
+              <div className="py-1 px-4 rounded-full bg-[#131A29]/95 text-orange-400 font-chakra font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(0,0,0,0.8)] border border-orange-500/40">
                 {combatBanner}
               </div>
             </div>
@@ -1201,15 +1202,7 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
                       {activePlayerCard.statusEffects.map((eff, i) => (
                         <div
                           key={i}
-                          className={`px-2 py-0.5 rounded-full text-[9px] font-chakra font-black tracking-wider uppercase flex items-center space-x-1 shadow-lg border animate-pulse whitespace-nowrap ${
-                            eff.type === "freeze"
-                              ? "bg-sky-950/95 text-sky-300 border-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.6)]"
-                              : eff.type === "burn"
-                              ? "bg-amber-950/95 text-amber-300 border-amber-500 shadow-[0_0_10px_rgba(249,115,22,0.6)]"
-                              : eff.type === "shock"
-                              ? "bg-yellow-950/95 text-yellow-300 border-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.6)]"
-                              : "bg-purple-950/95 text-purple-300 border-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.6)]"
-                          }`}
+                          className="px-2 py-0.5 rounded-full text-[9px] font-chakra font-bold tracking-wider uppercase flex items-center space-x-1 shadow-md border border-slate-700/80 bg-[#0B0F18]/95 text-slate-300 whitespace-nowrap"
                         >
                           <span>{eff.type === "freeze" ? "❄️" : eff.type === "burn" ? "🔥" : eff.type === "shock" ? "⚡" : "☠️"}</span>
                           <span>{eff.type} ({eff.duration}t)</span>
@@ -1259,30 +1252,30 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
               )}
             </div>
 
-            {/* CENTER HOLOGRAPHIC CLASH ZONE */}
+            {/* CENTER CLASH ZONE */}
             <div className="flex flex-col items-center justify-center relative px-2 shrink-0">
-              {/* Rotating Holographic Arena Duel Ring */}
+              {/* Tactical Arena Duel Ring */}
               <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center">
-                <div className="absolute inset-0 rounded-full border border-dashed border-cyan-500/30 animate-arena-ring pointer-events-none" />
-                <div className="absolute inset-2 rounded-full border border-slate-700/50 pointer-events-none" />
-                <div className="absolute inset-5 rounded-full bg-cyan-950/20 pointer-events-none" />
+                <div className="absolute inset-0 rounded-full border border-slate-800 pointer-events-none" />
+                <div className="absolute inset-2 rounded-full border border-slate-800/60 pointer-events-none" />
+                <div className="absolute inset-6 rounded-full bg-slate-950/60 pointer-events-none" />
 
-                {/* Projectile Laser Beams */}
+                {/* Projectile Beams */}
                 {projectileActive === "player" && (
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
-                    <div className="w-28 sm:w-36 h-2 bg-gradient-to-r from-emerald-400 via-cyan-300 to-amber-300 rounded-full shadow-[0_0_20px_rgba(52,211,153,1)] animate-beam-horizontal-player" />
+                    <div className="w-28 sm:w-36 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-400 to-transparent rounded-full shadow-[0_0_8px_rgba(16,185,129,0.4)] animate-beam-horizontal-player" />
                   </div>
                 )}
 
                 {projectileActive === "opponent" && (
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
-                    <div className="w-28 sm:w-36 h-2 bg-gradient-to-r from-red-500 via-rose-400 to-amber-400 rounded-full shadow-[0_0_20px_rgba(244,63,94,1)] animate-beam-horizontal-opponent" />
+                    <div className="w-28 sm:w-36 h-1.5 bg-gradient-to-r from-red-500 via-rose-400 to-transparent rounded-full shadow-[0_0_8px_rgba(244,63,94,0.4)] animate-beam-horizontal-opponent" />
                   </div>
                 )}
 
                 {/* Center VS Clash Icon */}
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-700/80 flex items-center justify-center shadow-lg relative z-10">
-                  <span className="font-silkscreen font-bold text-sm text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400">
+                <div className="w-9 h-9 rounded-xl bg-[#0B0F19] border border-slate-800 flex items-center justify-center shadow-md relative z-10">
+                  <span className="font-silkscreen font-bold text-xs text-orange-400">
                     VS
                   </span>
                 </div>
@@ -1313,15 +1306,7 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
                       {activeOpponentCard.statusEffects.map((eff, i) => (
                         <div
                           key={i}
-                          className={`px-2 py-0.5 rounded-full text-[9px] font-chakra font-black tracking-wider uppercase flex items-center space-x-1 shadow-lg border animate-pulse whitespace-nowrap ${
-                            eff.type === "freeze"
-                              ? "bg-sky-950/95 text-sky-300 border-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.6)]"
-                              : eff.type === "burn"
-                              ? "bg-amber-950/95 text-amber-300 border-amber-500 shadow-[0_0_10px_rgba(249,115,22,0.6)]"
-                              : eff.type === "shock"
-                              ? "bg-yellow-950/95 text-yellow-300 border-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.6)]"
-                              : "bg-purple-950/95 text-purple-300 border-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.6)]"
-                          }`}
+                          className="px-2 py-0.5 rounded-full text-[9px] font-chakra font-bold tracking-wider uppercase flex items-center space-x-1 shadow-md border border-slate-700/80 bg-[#0B0F18]/95 text-slate-300 whitespace-nowrap"
                         >
                           <span>{eff.type === "freeze" ? "❄️" : eff.type === "burn" ? "🔥" : eff.type === "shock" ? "⚡" : "☠️"}</span>
                           <span>{eff.type} ({eff.duration}t)</span>
@@ -1501,25 +1486,25 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
                   disabled={battleState.currentTurn !== "player" || isAiThinking || attacker !== "none" || isPlayerFrozen}
                   className={`py-2.5 px-3 rounded-xl ${
                     isPlayerFrozen
-                      ? "bg-slate-800 border border-sky-500/40 text-sky-300"
-                      : "bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-slate-100 shadow-[0_0_15px_rgba(220,38,38,0.35)]"
+                      ? "bg-slate-900 border border-slate-800 text-slate-500"
+                      : "bg-[#131926] hover:bg-[#1B2436] border border-orange-500/40 hover:border-orange-500/70 text-slate-100 shadow-[0_0_15px_rgba(0,0,0,0.5)]"
                   } disabled:opacity-40 disabled:cursor-not-allowed font-bold text-xs uppercase tracking-wider flex items-center justify-between transition-all active:scale-[0.98]`}
                 >
                   <div className="flex items-center space-x-2">
-                    <span className="w-5 h-5 rounded bg-black/40 border border-white/20 flex items-center justify-center font-mono text-[10px] font-black text-white shrink-0">
+                    <span className="w-5 h-5 rounded bg-black/50 border border-slate-700 flex items-center justify-center font-mono text-[10px] font-bold text-slate-300 shrink-0">
                       1
                     </span>
-                    <Swords className="w-4 h-4 text-orange-200 shrink-0" />
+                    <Swords className="w-4 h-4 text-orange-400 shrink-0" />
                     <div className="text-left leading-tight">
-                      <div className="font-extrabold text-xs font-chakra">
+                      <div className="font-bold text-xs font-chakra text-slate-100">
                         {isPlayerFrozen ? "❄️ Frozen Solid" : "Market Strike"}
                       </div>
-                      <div className="text-[9px] text-rose-100 normal-case">
+                      <div className="text-[9px] text-slate-400 normal-case">
                         {isPlayerFrozen ? "Turn skipped as frost thaws..." : `Est. ~${estStrikeDamage} DMG`}
                       </div>
                     </div>
                   </div>
-                  <span className="font-mono text-[10px] font-bold text-amber-200 bg-black/30 px-1.5 py-0.5 rounded shrink-0">
+                  <span className="font-mono text-[10px] font-bold text-orange-400 bg-black/40 px-1.5 py-0.5 rounded border border-orange-500/20 shrink-0">
                     +25 MP
                   </span>
                 </button>
@@ -1538,34 +1523,26 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
                   }
                   className={`py-2.5 px-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-between transition-all active:scale-[0.98] ${
                     isPlayerFrozen || !isSkillReady
-                      ? "bg-slate-800/80 border border-slate-700 text-slate-400 disabled:opacity-40 disabled:cursor-not-allowed"
-                      : skillElement === "ice"
-                      ? "bg-gradient-to-r from-sky-600 via-cyan-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 shadow-[0_0_20px_rgba(56,189,248,0.5)] ring-2 ring-sky-300 animate-energy-ready text-white"
-                      : skillElement === "fire"
-                      ? "bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 hover:from-red-500 hover:to-amber-500 shadow-[0_0_20px_rgba(239,68,68,0.5)] ring-2 ring-amber-300 animate-energy-ready text-white"
-                      : skillElement === "electric"
-                      ? "bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400 hover:from-yellow-300 hover:to-orange-400 shadow-[0_0_20px_rgba(234,179,8,0.5)] ring-2 ring-yellow-200 animate-energy-ready text-slate-950 font-black"
-                      : skillElement === "poison"
-                      ? "bg-gradient-to-r from-purple-700 via-violet-600 to-fuchsia-600 hover:from-purple-600 hover:to-fuchsia-500 shadow-[0_0_20px_rgba(168,85,247,0.5)] ring-2 ring-purple-300 animate-energy-ready text-white"
-                      : "bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 shadow-[0_0_20px_rgba(16,185,129,0.5)] ring-2 ring-emerald-300 animate-energy-ready text-white"
+                      ? "bg-[#0A0E17] border border-slate-800 text-slate-500 disabled:opacity-40 disabled:cursor-not-allowed"
+                      : "bg-[#131926] hover:bg-[#1B2436] border border-slate-700 hover:border-slate-500 text-slate-100 shadow-[0_0_15px_rgba(0,0,0,0.5)]"
                   }`}
                 >
                   <div className="flex items-center space-x-2">
-                    <span className="w-5 h-5 rounded bg-black/40 border border-white/20 flex items-center justify-center font-mono text-[10px] font-black text-white shrink-0">
+                    <span className="w-5 h-5 rounded bg-black/50 border border-slate-700 flex items-center justify-center font-mono text-[10px] font-bold text-slate-300 shrink-0">
                       2
                     </span>
                     <span className="text-base shrink-0">{elementIcon}</span>
                     <div className="text-left leading-tight">
-                      <div className="font-extrabold text-xs font-chakra truncate max-w-[130px]">
+                      <div className="font-bold text-xs font-chakra truncate max-w-[130px] text-slate-100">
                         {activePlayerCard.skill.name}
                       </div>
-                      <div className="text-[9px] text-emerald-100 normal-case truncate max-w-[140px]">
+                      <div className="text-[9px] text-slate-400 normal-case truncate max-w-[140px]">
                         {activePlayerCard.skill.description}
                       </div>
                     </div>
                   </div>
-                  <span className={`font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-black/30 shrink-0 ${
-                    isSkillReady ? "text-emerald-200" : "text-slate-400"
+                  <span className={`font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-black/40 shrink-0 ${
+                    isSkillReady ? "text-emerald-400 border border-emerald-500/30" : "text-slate-500 border border-slate-800"
                   }`}>
                     {activePlayerCard.skill.manaCost} MP
                   </span>
@@ -1657,8 +1634,8 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
           <div className="w-full max-w-md bg-[#0C111C] border border-slate-800 rounded-2xl shadow-2xl p-6 text-center text-slate-100 animate-in zoom-in-95 duration-300">
             {battleState.winner === "player" ? (
               <>
-                <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center mx-auto mb-4 text-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.5)]">
-                  <Trophy className="w-8 h-8" />
+                <div className="w-14 h-14 rounded-full bg-orange-500/10 border border-orange-500/40 flex items-center justify-center mx-auto mb-4 text-orange-400">
+                  <Trophy className="w-7 h-7" />
                 </div>
                 <h2 className="text-3xl sm:text-4xl font-bold font-silkscreen text-slate-100 uppercase tracking-wide">
                   VICTORY ACHIEVED!
@@ -1667,25 +1644,34 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
                   You successfully capitalized on crypto market momentum and overpowered the opposing portfolio!
                 </p>
 
-                <div className="bg-[#111726] rounded-xl p-4 border border-slate-800 text-xs font-mono space-y-2 mb-6">
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Match Reward:</span>
-                    <span className="text-emerald-400 font-bold">+0.0020 ETH</span>
+                <div className="bg-[#0E1422] rounded-xl p-4 border border-slate-800 text-xs font-mono space-y-2 mb-6">
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-800/80">
+                    <span className="text-slate-400">Match Victory Reward:</span>
+                    <span className="text-orange-400 font-bold font-chakra flex items-center space-x-1.5 text-sm">
+                      <Image src="/logo.png" alt="AVOX" width={16} height={16} className="w-4 h-4 object-contain" />
+                      <span>+50 AVOX</span>
+                    </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">MMR Rating Change:</span>
-                    <span className="text-cyan-400 font-bold">+25 Rating (Current: {profile.ratingMMR})</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400">Total AVOX Vault:</span>
+                    <span className="text-slate-200 font-bold font-mono">
+                      {profile.avoxBalance} AVOX
+                    </span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400">Rating Change:</span>
+                    <span className="text-slate-200 font-bold">+25 MMR ({profile.ratingMMR})</span>
+                  </div>
+                  <div className="flex items-center justify-between">
                     <span className="text-slate-400">Rank Standing:</span>
-                    <span className="text-amber-400 font-bold">{profile.rankTier}</span>
+                    <span className="text-slate-300 font-bold">{profile.rankTier}</span>
                   </div>
                 </div>
               </>
             ) : (
               <>
-                <div className="w-16 h-16 rounded-full bg-rose-500/20 border-2 border-rose-400 flex items-center justify-center mx-auto mb-4 text-rose-400 shadow-[0_0_30px_rgba(244,63,94,0.5)]">
-                  <Skull className="w-8 h-8" />
+                <div className="w-14 h-14 rounded-full bg-red-500/10 border border-red-500/40 flex items-center justify-center mx-auto mb-4 text-red-400">
+                  <Skull className="w-7 h-7" />
                 </div>
                 <h2 className="text-3xl sm:text-4xl font-bold font-silkscreen text-slate-100 uppercase tracking-wide">
                   DEFEAT
@@ -1694,10 +1680,14 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
                   Adverse price volatility wiped out your active card reserves.
                 </p>
 
-                <div className="bg-[#111726] rounded-xl p-4 border border-slate-800 text-xs font-mono space-y-2 mb-6">
+                <div className="bg-[#0E1422] rounded-xl p-4 border border-slate-800 text-xs font-mono space-y-2 mb-6">
                   <div className="flex justify-between">
-                    <span className="text-slate-400">MMR Rating Change:</span>
-                    <span className="text-rose-400 font-bold">-18 Rating</span>
+                    <span className="text-slate-400">Rating Change:</span>
+                    <span className="text-slate-300 font-bold">-18 MMR</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">AVOX Vault:</span>
+                    <span className="text-orange-400 font-bold">{profile.avoxBalance} AVOX</span>
                   </div>
                 </div>
               </>

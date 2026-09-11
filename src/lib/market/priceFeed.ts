@@ -1,8 +1,38 @@
 import { AssetSymbol, LivePriceData } from "@/types";
 
-// Base price anchors for the 22 supported blockchain assets
-const INITIAL_ASSET_DATA: Record<AssetSymbol, { name: string; price: number; change24h: number }> = {
-  ROBINHOOD: { name: "Robinhood Chain", price: 21.40, change24h: 5.82 },
+// Asset ticker mapping for live real-time Binance 24hr API
+const BINANCE_TICKER_MAP: Partial<Record<AssetSymbol, string>> = {
+  BTC: "BTCUSDT",
+  ETH: "ETHUSDT",
+  SOL: "SOLUSDT",
+  DOGE: "DOGEUSDT",
+  AVAX: "AVAXUSDT",
+  LINK: "LINKUSDT",
+  BNB: "BNBUSDT",
+  PEPE: "1000PEPEUSDT",
+  NEAR: "NEARUSDT",
+  SUI: "SUIUSDT",
+  ARBITRUM: "ARBUSDT",
+  OPTIMISM: "OPUSDT",
+  POLYGON: "POLUSDT",
+  ZKSYNC: "ZKUSDT",
+  COSMOS: "ATOMUSDT",
+  APECHAIN: "APEUSDT",
+  GNOSIS: "GNOUSDT",
+  TON: "TONUSDT",
+  WORLDCHAIN: "WLDUSDT",
+  HEDERA: "HBARUSDT",
+  CARDANO: "ADAUSDT",
+  POLKADOT: "DOTUSDT",
+  APTOS: "APTUSDT",
+  TRON: "TRXUSDT",
+  RIPPLE: "XRPUSDT",
+  FANTOM: "FTMUSDT"
+};
+
+// Initial baseline prices for fast cold starts
+const BASELINE_ASSET_DATA: Record<AssetSymbol, { name: string; price: number; change24h: number }> = {
+  ROBINHOOD: { name: "Robinhood", price: 21.40, change24h: 3.82 },
   ETH: { name: "Ethereum", price: 3480.5, change24h: 2.15 },
   ARBITRUM: { name: "Arbitrum", price: 0.54, change24h: -1.4 },
   OPTIMISM: { name: "Optimism", price: 1.45, change24h: 2.8 },
@@ -40,35 +70,33 @@ class MarketPriceService {
   private prices: Record<AssetSymbol, LivePriceData>;
   private listeners: Set<PriceListener> = new Set();
   private intervalId: NodeJS.Timeout | null = null;
-  private simulatedShock: Partial<Record<AssetSymbol, number>> = {}; // percent offset
+  private isFetching: boolean = false;
+  private simulatedShock: Partial<Record<AssetSymbol, number>> = {};
 
   constructor() {
     this.prices = {} as Record<AssetSymbol, LivePriceData>;
 
-    // Initialize state
-    (Object.keys(INITIAL_ASSET_DATA) as AssetSymbol[]).forEach((symbol) => {
-      const init = INITIAL_ASSET_DATA[symbol];
+    // Initialize state from baseline
+    (Object.keys(BASELINE_ASSET_DATA) as AssetSymbol[]).forEach((symbol) => {
+      const init = BASELINE_ASSET_DATA[symbol];
       const base = init.price;
-      const history: number[] = [];
-      for (let i = 20; i >= 0; i--) {
-        const noise = (Math.sin(i * 0.5) + (Math.random() - 0.5) * 0.4) * (base * 0.02);
-        history.push(Number((base + noise).toFixed(symbol === "PEPE" ? 8 : 2)));
-      }
+      const history: number[] = [base * 0.98, base * 0.99, base * 0.995, base * 1.002, base];
 
       this.prices[symbol] = {
         symbol,
         price: base,
         change24h: init.change24h,
-        change5m: 0.2,
-        high24h: base * 1.05,
-        low24h: base * 0.95,
+        change5m: 0,
+        high24h: base * 1.04,
+        low24h: base * 0.96,
         history,
         lastUpdate: Date.now()
       };
     });
 
     if (typeof window !== "undefined") {
-      this.startPolling();
+      this.fetchRealMarketPrices();
+      this.startRealPolling();
     }
   }
 
@@ -89,8 +117,88 @@ class MarketPriceService {
   }
 
   /**
-   * Market Volatility Simulator:
-   * Instantly trigger a pump or dump on any asset to test live in-game stat adjustments!
+   * Fetches genuine real-time prices from the public Binance 24hr API
+   */
+  public async fetchRealMarketPrices() {
+    if (this.isFetching) return;
+    this.isFetching = true;
+
+    try {
+      const response = await fetch("https://api.binance.com/api/v3/ticker/24hr", {
+        cache: "no-store"
+      });
+
+      if (!response.ok) return;
+
+      const data: Array<{
+        symbol: string;
+        lastPrice: string;
+        priceChangePercent: string;
+        highPrice: string;
+        lowPrice: string;
+      }> = await response.json();
+
+      const tickerLookup = new Map<string, { price: number; change24h: number; high: number; low: number }>();
+      for (const item of data) {
+        tickerLookup.set(item.symbol, {
+          price: parseFloat(item.lastPrice),
+          change24h: parseFloat(item.priceChangePercent),
+          high: parseFloat(item.highPrice),
+          low: parseFloat(item.lowPrice)
+        });
+      }
+
+      let hasUpdates = false;
+
+      (Object.keys(BINANCE_TICKER_MAP) as AssetSymbol[]).forEach((sym) => {
+        const pair = BINANCE_TICKER_MAP[sym];
+        if (!pair) return;
+
+        const info = tickerLookup.get(pair);
+        if (info && !isNaN(info.price) && info.price > 0) {
+          // Normalize 1000PEPE to single PEPE
+          const actualPrice = pair === "1000PEPEUSDT" ? info.price / 1000 : info.price;
+          const current = this.prices[sym];
+          const shock = this.simulatedShock[sym] || 0;
+          const adjustedPrice = actualPrice * (1 + shock / 100);
+
+          const newHistory = current ? [...current.history.slice(1), adjustedPrice] : [adjustedPrice];
+
+          this.prices[sym] = {
+            symbol: sym,
+            price: Number(adjustedPrice.toFixed(sym === "PEPE" ? 8 : 2)),
+            change24h: Number((info.change24h + shock * 0.7).toFixed(2)),
+            change5m: current ? Number((((adjustedPrice - current.price) / current.price) * 100).toFixed(2)) : 0,
+            high24h: info.high,
+            low24h: info.low,
+            history: newHistory,
+            lastUpdate: Date.now()
+          };
+          hasUpdates = true;
+        }
+      });
+
+      if (hasUpdates) {
+        this.notify();
+      }
+    } catch (err) {
+      // In sandbox or isolated network, keep robust fallback
+      console.warn("Live crypto ticker fetch:", err);
+    } finally {
+      this.isFetching = false;
+    }
+  }
+
+  private startRealPolling() {
+    if (this.intervalId) return;
+    // Poll real market feeds every 6 seconds
+    this.intervalId = setInterval(() => {
+      this.fetchRealMarketPrices();
+    }, 6000);
+  }
+
+  /**
+   * Optional manual simulator for testing extreme market movements in BattleArena
    */
   public triggerMarketShock(symbol: AssetSymbol, percentChange: number) {
     this.simulatedShock[symbol] = (this.simulatedShock[symbol] || 0) + percentChange;
@@ -114,44 +222,7 @@ class MarketPriceService {
 
   public resetShocks() {
     this.simulatedShock = {};
-    (Object.keys(INITIAL_ASSET_DATA) as AssetSymbol[]).forEach((sym) => {
-      const init = INITIAL_ASSET_DATA[sym];
-      this.prices[sym].price = init.price;
-      this.prices[sym].change5m = 0;
-      this.prices[sym].change24h = init.change24h;
-    });
-    this.notify();
-  }
-
-  private startPolling() {
-    if (this.intervalId) return;
-
-    // Tick every 3.5 seconds with micro-movements
-    this.intervalId = setInterval(() => {
-      let updated = false;
-
-      (Object.keys(this.prices) as AssetSymbol[]).forEach((sym) => {
-        // Subtle organic random walk ±0.15%
-        const deltaPct = (Math.random() - 0.49) * 0.3;
-        const p = this.prices[sym];
-        const nextPrice = p.price * (1 + deltaPct / 100);
-        const history = [...p.history.slice(1), nextPrice];
-
-        this.prices[sym] = {
-          ...p,
-          price: Number(nextPrice.toFixed(sym === "PEPE" ? 8 : 2)),
-          change5m: Number((p.change5m + deltaPct * 0.8).toFixed(2)),
-          change24h: Number((p.change24h + deltaPct * 0.1).toFixed(2)),
-          history,
-          lastUpdate: Date.now()
-        };
-        updated = true;
-      });
-
-      if (updated) {
-        this.notify();
-      }
-    }, 3500);
+    this.fetchRealMarketPrices();
   }
 
   private notify() {

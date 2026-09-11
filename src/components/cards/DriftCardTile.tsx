@@ -89,10 +89,6 @@ export function DriftCardTile({ card }: DriftCardTileProps) {
 
   return (
     <div className={`w-full h-full p-2.5 rounded-[13px] border ${rarityStyle.border} ${rarityStyle.glow} bg-gradient-to-b from-[#121928] via-[#0B0F18] to-[#07090E] flex flex-col justify-between select-none relative overflow-hidden group`}>
-      {/* Foil Overlays */}
-      {card.foilType === "Holo" && <div className="absolute inset-0 rounded-[13px] holo-card-overlay pointer-events-none" />}
-      {card.foilType === "GoldFoil" && <div className="absolute inset-0 rounded-[13px] gold-foil-overlay pointer-events-none" />}
-
       {/* Header: Official TrustWallet Logo, Asset, Rarity */}
       <div className="flex items-center justify-between z-10">
         <div className="flex items-center space-x-1.5">

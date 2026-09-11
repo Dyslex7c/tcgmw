@@ -68,6 +68,7 @@ export interface Card {
   mintedAt: number;
   owner: string;
   sparkline: number[];
+  isMinted?: boolean;
 }
 
 export type PackTier = "Starter" | "Alpha" | "Whale";
