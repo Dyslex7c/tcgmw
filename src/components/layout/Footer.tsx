@@ -57,7 +57,7 @@ export function Footer({ onOpenSimulator }: FooterProps) {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
               </span>
-              <span>AVOX // MARKETWARS COMBAT PROTOCOL ACTIVE</span>
+              <span>AVOX // COMBAT PROTOCOL ACTIVE</span>
             </span>
             <span className="text-slate-600 hidden sm:inline">•</span>
             <span className="text-slate-400 font-inconsolata hidden sm:inline">
@@ -99,7 +99,7 @@ export function Footer({ onOpenSimulator }: FooterProps) {
               <div className="relative w-10 h-10 rounded-xl bg-[#090D15] p-1 border border-orange-500/40 shadow-[0_0_18px_rgba(234,88,12,0.4)] group-hover:shadow-[0_0_28px_rgba(234,88,12,0.65)] group-hover:border-orange-400 transition-all duration-300 flex items-center justify-center overflow-hidden shrink-0">
                 <Image
                   src="/logo.png"
-                  alt="AVOX MarketWars"
+                  alt="AVOX"
                   width={36}
                   height={36}
                   className="w-8 h-8 object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_8px_rgba(249,115,22,0.6)]"
@@ -108,10 +108,7 @@ export function Footer({ onOpenSimulator }: FooterProps) {
               <div className="flex flex-col">
                 <div className="flex items-center space-x-1.5">
                   <span className="text-2xl sm:text-3xl font-bold font-silkscreen tracking-wide text-slate-100 uppercase leading-none">
-                    MARKET<span className="text-red-500">WARS</span>
-                  </span>
-                  <span className="text-[10px] font-chakra font-bold px-1.5 py-0.5 rounded bg-orange-950/80 text-orange-400 border border-orange-500/40 uppercase tracking-wider">
-                    AVOX
+                    AV<span className="text-red-500">OX</span>
                   </span>
                 </div>
                 <span className="text-[10px] font-chakra font-bold text-orange-400 tracking-widest uppercase">
@@ -257,15 +254,15 @@ export function Footer({ onOpenSimulator }: FooterProps) {
             <ul className="space-y-2 text-xs font-inconsolata text-slate-400">
               <li>
                 <div className="text-[10px] text-slate-500 font-chakra font-bold">ERC-721 TCG</div>
-                <div className="text-slate-300 text-[11px] truncate">MarketWarsCard</div>
+                <div className="text-slate-300 text-[11px] truncate">AvoxCard</div>
               </li>
               <li>
                 <div className="text-[10px] text-slate-500 font-chakra font-bold">VRF COORDINATOR</div>
-                <div className="text-slate-300 text-[11px] truncate">MarketWarsPackVRF</div>
+                <div className="text-slate-300 text-[11px] truncate">AvoxPackVRF</div>
               </li>
               <li>
                 <div className="text-[10px] text-slate-500 font-chakra font-bold">PRIZE POOL LEDGER</div>
-                <div className="text-slate-300 text-[11px] truncate">MarketWarsPrizePool</div>
+                <div className="text-slate-300 text-[11px] truncate">AvoxPrizePool</div>
               </li>
             </ul>
           </div>
@@ -280,7 +277,7 @@ export function Footer({ onOpenSimulator }: FooterProps) {
         {/* Bottom Sub-Footer: Copyright, Badges & Legal Disclaimer */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-hanken text-slate-500">
           <div className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-3 text-center sm:text-left">
-            <span>&copy; 2026 AVOX MarketWars Protocol. All rights reserved.</span>
+            <span>&copy; 2026 AVOX Protocol. All rights reserved.</span>
             <span className="hidden sm:inline text-slate-700">•</span>
             <span className="font-chakra text-[11px] text-slate-400">
               Verifiable Decentralized Card Battler
@@ -296,10 +293,29 @@ export function Footer({ onOpenSimulator }: FooterProps) {
           </div>
         </div>
 
-        {/* Disclaimer Note */}
-        <div className="text-center text-[10px] text-slate-600 font-hanken mt-4 leading-relaxed max-w-2xl mx-auto">
-          Disclaimer: MarketWars simulates in-game battle power based on real-time cryptocurrency feeds.
-          Tokens used on testnets are for gameplay and testing purposes and hold no fiat value.
+        {/* Disclaimers */}
+        <div className="mt-8 pt-6 border-t border-slate-800/60 text-slate-500 font-hanken text-[11px] leading-relaxed max-w-5xl mx-auto space-y-2.5">
+          <div className="text-[10px] font-chakra uppercase tracking-wider text-slate-400 font-bold text-center sm:text-left">
+            Disclaimers
+          </div>
+          <p>
+            The website maintainer is not responsible for interactions with the token or the contract address. Please verify independently and use at your own risk.
+          </p>
+          <p>
+            The website maintainer&apos;s role is limited to the development and technical maintenance of this website. The website maintainer is not involved in the creation, deployment, management, trading, liquidity operations, tokenomics, or financial decisions relating to any mainnet digital asset referenced on this website.
+          </p>
+          <p>
+            Token contract address displayed on this website is provided by the project operators. Users should independently verify all relevant information before interacting with any smart contract or digital asset.
+          </p>
+          <p>
+            Nothing on this website constitutes financial, investment, legal, or tax advice, nor should any information be interpreted as a recommendation or solicitation to buy, sell, or hold any digital asset.
+          </p>
+          <p>
+            Digital assets involve significant risk and may lose all or a substantial portion of their value. Users are solely responsible for their own decisions and interactions with any digital asset or smart contract.
+          </p>
+          <p className="text-[10px] text-slate-600 pt-1">
+            Disclaimer: AVOX simulates in-game battle power based on real-time cryptocurrency feeds. Tokens used on testnets are for gameplay and testing purposes and hold no fiat value.
+          </p>
         </div>
       </div>
     </footer>

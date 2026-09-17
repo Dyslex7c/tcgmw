@@ -4,7 +4,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { AppKitProvider } from "@/context/AppKitProvider";
 
 export const metadata: Metadata = {
-  title: "AVOX MarketWars — Real-Time Crypto Trading Card Game",
+  title: "AVOX — Real-Time Crypto Trading Card Game",
   description: "Web3 TCG where live crypto price feeds dictate in-battle card stats in real time. Powered by Pyth Oracle and Chainlink VRF.",
   icons: {
     icon: "/logo.png",

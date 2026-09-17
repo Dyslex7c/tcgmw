@@ -200,7 +200,7 @@ class MarketplaceStore {
       );
     }
 
-    // 2. Check if marketplace is already approved (MarketWarsCard automatically approves marketplace contract)
+    // 2. Check if marketplace is already approved (AvoxCard automatically approves marketplace contract)
     const isApproved = (await publicClient.readContract({
       ...cardContractConfig,
       functionName: "isApprovedForAll",

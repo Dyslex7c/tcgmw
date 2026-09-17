@@ -119,7 +119,7 @@ class MatchmakerService {
   constructor() {
     if (typeof window !== "undefined" && "BroadcastChannel" in window) {
       try {
-        this.channel = new BroadcastChannel("marketwars_matchmaking_v1");
+        this.channel = new BroadcastChannel("avox_matchmaking_v1");
       } catch (err) {
         console.warn("BroadcastChannel not available:", err);
       }

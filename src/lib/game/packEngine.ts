@@ -78,7 +78,7 @@ const FOIL_MAP: Record<number, FoilType> = {
 };
 
 /**
- * Purchases a pack on-chain via MarketWarsPackVRF on Sepolia
+ * Purchases a pack on-chain via AvoxPackVRF on Sepolia
  */
 export async function buyPackOnChain(
   tier: PackTier,
@@ -216,7 +216,7 @@ export async function waitForPackFulfillment(
 
   const mintedCards: Card[] = [];
 
-  // Query each token on-chain from MarketWarsCard.sol
+  // Query each token on-chain from AvoxCard.sol
   for (const tokenId of foundTokenIds) {
     try {
       const onChainData = (await publicClient.readContract({

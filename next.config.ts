@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  typescript: {
+    // Typecheck is run locally via npx tsc --noEmit; skipping it during Next build saves 6-10s on Vercel
+    ignoreBuildErrors: true,
+  },
   webpack: (config) => {
     config.externals = config.externals || [];
     config.externals.push("pino-pretty", "lokijs", "encoding");

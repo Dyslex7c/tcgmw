@@ -213,7 +213,7 @@ export function MarketplaceView() {
               </h1>
               <div className="flex flex-wrap items-center gap-2 mt-1">
                 <p className="text-xs text-slate-400">
-                  Trade verified MarketWars cards on Sepolia. 2.5% protocol fee automatically funds the Seasonal Prize Pool.
+                  Trade verified AVOX cards on Sepolia. 2.5% protocol fee automatically funds the Seasonal Prize Pool.
                 </p>
                 <a
                   href={getExplorerAddressUrl(CONTRACT_CONFIG.marketplaceContract)}

@@ -1,5 +1,5 @@
 /**
- * Procedural Web Audio Synthesizer for MarketWars.
+ * Procedural Web Audio Synthesizer for AVOX.
  * Generates crisp sci-fi game sound effects on the fly with zero external audio assets.
  */
 

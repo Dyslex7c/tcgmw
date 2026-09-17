@@ -83,7 +83,7 @@ async function deployContract(
 
 export async function main() {
   console.log("==================================================");
-  console.log("       MarketWars Smart Contract Deployer         ");
+  console.log("          AVOX Smart Contract Deployer            ");
   console.log("==================================================");
 
   const env = loadEnv();

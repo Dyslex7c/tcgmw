@@ -71,7 +71,7 @@ export function PackOpeningStage() {
     setPendingTxHash(null);
 
     try {
-      // Step 1: Send on-chain transaction to MarketWarsPackVRF
+      // Step 1: Send on-chain transaction to AvoxPackVRF
       const txHash = await buyPackOnChain(tierToBuy, currentAddr as `0x${string}`);
       setPendingTxHash(txHash);
       setVrfStatusText("Transaction broadcast! Awaiting Ethereum Sepolia confirmation & VRF fulfillment...");

@@ -1,4 +1,4 @@
-export const MarketWarsCardABI = [
+export const AvoxCardABI = [
   {
     "type": "function",
     "name": "mintCard",
@@ -116,7 +116,7 @@ export const MarketWarsCardABI = [
   }
 ] as const;
 
-export const MarketWarsPackVRFABI = [
+export const AvoxPackVRFABI = [
   {
     "type": "function",
     "name": "buyPack",
@@ -167,7 +167,7 @@ export const MarketWarsPackVRFABI = [
   }
 ] as const;
 
-export const MarketWarsMarketplaceABI = [
+export const AvoxMarketplaceABI = [
   {
     "type": "function",
     "name": "listCard",
@@ -242,7 +242,7 @@ export const MarketWarsMarketplaceABI = [
   }
 ] as const;
 
-export const MarketWarsPrizePoolABI = [
+export const AvoxPrizePoolABI = [
   {
     "type": "function",
     "name": "currentSeasonPool",
@@ -313,3 +313,10 @@ export const MarketWarsPrizePoolABI = [
     ]
   }
 ] as const;
+
+// Backward-compatible aliases
+export const MarketWarsCardABI = AvoxCardABI;
+export const MarketWarsPackVRFABI = AvoxPackVRFABI;
+export const MarketWarsMarketplaceABI = AvoxMarketplaceABI;
+export const MarketWarsPrizePoolABI = AvoxPrizePoolABI;
+

@@ -10,10 +10,10 @@ import {
 import { sepolia } from "viem/chains";
 import { CONTRACT_CONFIG } from "@/lib/constants/contracts";
 import {
-  MarketWarsCardABI,
-  MarketWarsPackVRFABI,
-  MarketWarsMarketplaceABI,
-  MarketWarsPrizePoolABI
+  AvoxCardABI,
+  AvoxPackVRFABI,
+  AvoxMarketplaceABI,
+  AvoxPrizePoolABI
 } from "@/lib/contracts/abis";
 
 import { getWalletClient, switchChain, getChainId } from "wagmi/actions";
@@ -143,20 +143,20 @@ export async function ensureSepoliaNetwork(): Promise<boolean> {
 // Contract typed configurations
 export const cardContractConfig = {
   address: CONTRACT_CONFIG.cardContract,
-  abi: MarketWarsCardABI
+  abi: AvoxCardABI
 } as const;
 
 export const packContractConfig = {
   address: CONTRACT_CONFIG.packContract,
-  abi: MarketWarsPackVRFABI
+  abi: AvoxPackVRFABI
 } as const;
 
 export const marketplaceContractConfig = {
   address: CONTRACT_CONFIG.marketplaceContract,
-  abi: MarketWarsMarketplaceABI
+  abi: AvoxMarketplaceABI
 } as const;
 
 export const prizePoolContractConfig = {
   address: CONTRACT_CONFIG.prizePoolContract,
-  abi: MarketWarsPrizePoolABI
+  abi: AvoxPrizePoolABI
 } as const;

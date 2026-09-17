@@ -1,4 +1,4 @@
-# ⚔️ MarketWars
+# ⚔️ AVOX
 
 > **Web3 Trading Card Game (TCG) Powered by Live Crypto Market Volatility & Verifiable Smart Contracts**  
 > Deployed on **Ethereum Sepolia Testnet** (`chainId: 11155111`)
@@ -7,7 +7,7 @@
 
 ## ⚡ Overview
 
-**MarketWars** is an on-chain competitive TCG where cards represent real cryptocurrency assets and their in-battle stats update live from real-time price feeds. Cards gain massive buffs during rallies and suffer debuffs during market dumps. Packs are opened using verifiable on-chain randomness, and all cards are tradeable ERC-721 NFTs.
+**AVOX** is an on-chain competitive TCG where cards represent real cryptocurrency assets and their in-battle stats update live from real-time price feeds. Cards gain massive buffs during rallies and suffer debuffs during market dumps. Packs are opened using verifiable on-chain randomness, and all cards are tradeable ERC-721 NFTs.
 
 - 📈 **Live Volatility Scaling**: Real-time Binance / Pyth price feeds dynamically modify card ATK, DEF, and SPD mid-match.
 - ❄️ **Pokémon-Style Elemental Combat**: Fast 3v3 blitz battles featuring **Freeze** (turn-skipping Cold Storage), **Burn** (damage-over-time), **Shock** (action fizzle & speed reduction), and **Poison** (escalating toxic damage).
@@ -33,10 +33,10 @@ All 4 contracts are verified on **Ethereum Sepolia** (Chain ID: `11155111`):
 
 | Contract | Address | Explorer Link |
 | :--- | :--- | :--- |
-| **MarketWarsCard** (ERC-721) | `0x209139a7c49a2ea834daf5ff496008ea02b2fbba` | [Etherscan](https://sepolia.etherscan.io/address/0x209139a7c49a2ea834daf5ff496008ea02b2fbba) |
-| **MarketWarsPackVRF** | `0x1dc2656a699c1bf6d827c555c994f5fd89e1ff75` | [Etherscan](https://sepolia.etherscan.io/address/0x1dc2656a699c1bf6d827c555c994f5fd89e1ff75) |
-| **MarketWarsMarketplace** | `0xb20655cb8160350ece1897a86ebbf832b4c26851` | [Etherscan](https://sepolia.etherscan.io/address/0xb20655cb8160350ece1897a86ebbf832b4c26851) |
-| **MarketWarsPrizePool** | `0xdb2db0f2bd83cfb8d5f1db480caf661978624f56` | [Etherscan](https://sepolia.etherscan.io/address/0xdb2db0f2bd83cfb8d5f1db480caf661978624f56) |
+| **AvoxCard** (ERC-721) | `0x209139a7c49a2ea834daf5ff496008ea02b2fbba` | [Etherscan](https://sepolia.etherscan.io/address/0x209139a7c49a2ea834daf5ff496008ea02b2fbba) |
+| **AvoxPackVRF** | `0x1dc2656a699c1bf6d827c555c994f5fd89e1ff75` | [Etherscan](https://sepolia.etherscan.io/address/0x1dc2656a699c1bf6d827c555c994f5fd89e1ff75) |
+| **AvoxMarketplace** | `0xb20655cb8160350ece1897a86ebbf832b4c26851` | [Etherscan](https://sepolia.etherscan.io/address/0xb20655cb8160350ece1897a86ebbf832b4c26851) |
+| **AvoxPrizePool** | `0xdb2db0f2bd83cfb8d5f1db480caf661978624f56` | [Etherscan](https://sepolia.etherscan.io/address/0xdb2db0f2bd83cfb8d5f1db480caf661978624f56) |
 
 ---
 

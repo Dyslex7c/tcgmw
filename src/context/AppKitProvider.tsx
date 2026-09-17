@@ -27,9 +27,9 @@ if (typeof window !== "undefined" && !(window as any).ClientAnalytics) {
 
 // 4. Create metadata
 const metadata = {
-  name: "MarketWars",
+  name: "AVOX",
   description: "Tactical PvP Crypto TCG Powered by Real-Time Oracles and Chainlink VRF",
-  url: typeof window !== "undefined" ? window.location.origin : "https://marketwars.app",
+  url: typeof window !== "undefined" ? window.location.origin : "https://avox.app",
   icons: ["https://avatars.githubusercontent.com/u/179229932"]
 };
 
@@ -39,6 +39,9 @@ export const modal = createAppKit({
   networks: networks as any,
   defaultNetwork: sepolia,
   allowUnsupportedChain: true,
+  enableReconnect: false,
+  enableWalletGuide: false,
+  enableCoinbase: false,
   projectId,
   metadata,
   themeMode: "dark",

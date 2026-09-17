@@ -12,16 +12,8 @@ import { walletStore, WalletState } from "@/lib/web3/walletStore";
 import { sound } from "@/lib/audio/soundEngine";
 import { CONTRACT_CONFIG, getExplorerAddressUrl } from "@/lib/constants/contracts";
 import {
-  Swords,
-  Package,
-  Store,
-  Layers,
-  Trophy,
   Volume2,
   VolumeX,
-  Wallet,
-  Zap,
-  CheckCircle2,
   AlertTriangle,
   ExternalLink,
   ShieldCheck
@@ -74,11 +66,11 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
   }, []);
 
   const navLinks = [
-    { href: "/battle", label: "Battle Arena", icon: Swords, badge: "PvP" },
-    { href: "/packs", label: "Pack Store", icon: Package, badge: "VRF" },
-    { href: "/marketplace", label: "Marketplace", icon: Store },
-    { href: "/collection", label: "Collection", icon: Layers },
-    { href: "/prize-pool", label: "Prize Pool", icon: Trophy, highlight: true }
+    { href: "/battle", label: "Battle Arena", badge: "PvP" },
+    { href: "/packs", label: "Pack Store", badge: "VRF" },
+    { href: "/marketplace", label: "Marketplace" },
+    { href: "/collection", label: "Collection" },
+    { href: "/prize-pool", label: "Prize Pool", highlight: true }
   ];
 
   const toggleSound = () => {
@@ -130,7 +122,10 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-[#070A10]/95 backdrop-blur-md border-b border-[#182030]">
+      <header className="sticky top-0 z-40 w-full bg-[#06080F]/55 backdrop-blur-2xl backdrop-saturate-[180%] border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.5),inset_0_1px_0_0_rgba(255,255,255,0.08)] transition-all duration-300">
+        {/* Top ambient specular highlight line */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           {/* Logo & Brand */}
           <Link
@@ -138,35 +133,31 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
             onClick={() => sound.playClick()}
             className="flex items-center space-x-3 group"
           >
-            <div className="relative w-12 h-12 sm:w-13 sm:h-13 rounded-xl bg-[#090D15]/90 p-1 border border-orange-500/40 shadow-[0_0_20px_rgba(234,88,12,0.4)] group-hover:shadow-[0_0_30px_rgba(234,88,12,0.7)] group-hover:border-orange-400 transition-all duration-300 flex items-center justify-center overflow-hidden shrink-0">
+            <div className="relative w-11 h-11 rounded-xl bg-white/[0.04] p-1 border border-white/[0.1] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),0_0_20px_rgba(234,88,12,0.2)] group-hover:shadow-[0_0_28px_rgba(234,88,12,0.5)] group-hover:border-orange-500/50 backdrop-blur-xl transition-all duration-300 flex items-center justify-center overflow-hidden shrink-0">
               <Image
                 src="/logo.png"
-                alt="AVOX MarketWars"
-                width={56}
-                height={56}
-                className="w-10 h-10 sm:w-11 sm:h-11 object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_12px_rgba(249,115,22,0.75)]"
+                alt="AVOX"
+                width={48}
+                height={48}
+                className="w-9 h-9 object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_10px_rgba(249,115,22,0.7)]"
                 priority
               />
             </div>
             <div>
               <div className="flex items-center space-x-2">
                 <span className="font-silkscreen font-bold text-xl sm:text-2xl tracking-wide text-slate-100 uppercase leading-none">
-                  Market<span className="text-red-500">Wars</span>
-                </span>
-                <span className="text-[10px] font-chakra font-bold px-1.5 py-0.5 rounded bg-orange-950/80 text-orange-400 border border-orange-500/40 uppercase tracking-wider">
-                  AVOX
+                  AV<span className="text-red-500">OX</span>
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 font-chakra tracking-widest hidden sm:block mt-0.5">
-                REAL-TIME ON-CHAIN PVP COMBAT
+              <p className="text-[9px] text-slate-400 font-chakra tracking-widest hidden sm:block mt-0.5 uppercase">
+                Tactical PvP Crypto TCG
               </p>
             </div>
           </Link>
 
-          {/* Navigation Items */}
-          <nav className="hidden md:flex items-center space-x-1">
+          {/* Navigation Items - Glass Capsule Segmented Dock (No Generic Icons) */}
+          <nav className="hidden md:flex items-center p-1 rounded-full bg-white/[0.03] border border-white/[0.07] backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]">
             {navLinks.map((item) => {
-              const Icon = item.icon;
               const isActive = pathname === item.href;
 
               return (
@@ -174,16 +165,24 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                   key={item.href}
                   href={item.href}
                   onClick={() => sound.playClick()}
-                  className={`relative flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-chakra font-bold tracking-wider transition-all ${
+                  className={`relative flex items-center space-x-2 px-4 py-1.5 rounded-full text-xs font-chakra font-semibold tracking-wider transition-all duration-200 ${
                     isActive
-                      ? "bg-[#141E33] text-orange-400 border border-orange-500/40 shadow-[0_0_12px_rgba(249,115,22,0.15)]"
-                      : "text-slate-400 hover:text-slate-100 hover:bg-[#0D1322]"
+                      ? "bg-white/[0.1] text-orange-400 border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_2px_12px_rgba(0,0,0,0.35)]"
+                      : "text-slate-400 hover:text-slate-100 hover:bg-white/[0.04] border border-transparent"
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? "text-orange-400" : "text-slate-400"}`} />
+                  {isActive && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-orange-400 shadow-[0_0_8px_rgba(251,146,60,0.8)]" />
+                  )}
                   <span>{item.label}</span>
                   {item.badge && (
-                    <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-orange-950/80 text-orange-400 border border-orange-500/30">
+                    <span
+                      className={`text-[9px] font-mono px-1.5 py-0.5 rounded-full ${
+                        isActive
+                          ? "bg-orange-500/20 text-orange-300 border border-orange-500/30"
+                          : "bg-white/[0.05] text-slate-400 border border-white/10"
+                      }`}
+                    >
                       {item.badge}
                     </span>
                   )}
@@ -196,7 +195,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
           <div className="flex items-center space-x-2.5">
             {/* AVOX Token Vault Pill */}
             <div
-              className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-[#0E1422] border border-orange-500/30 text-xs shadow-[0_0_10px_rgba(234,88,12,0.15)]"
+              className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl text-xs shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1),0_2px_10px_rgba(0,0,0,0.3)] hover:border-orange-500/30 transition-all group"
               title="Your AVOX Game Reward Token Balance"
             >
               <Image
@@ -204,12 +203,12 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                 alt="AVOX"
                 width={16}
                 height={16}
-                className="w-4 h-4 object-contain"
+                className="w-4 h-4 object-contain group-hover:scale-110 transition-transform duration-200"
               />
-              <span className="font-mono font-bold text-orange-400 text-[11px]">
+              <span className="font-mono font-bold text-orange-400 text-xs">
                 {profile.avoxBalance ?? 100}
               </span>
-              <span className="font-chakra text-[10px] text-slate-400 uppercase tracking-wider">
+              <span className="font-chakra text-[10px] text-slate-400 uppercase tracking-widest font-semibold">
                 AVOX
               </span>
             </div>
@@ -217,7 +216,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
             {/* Audio Toggle */}
             <button
               onClick={toggleSound}
-              className="p-2 rounded-lg bg-[#0F1420] border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors cursor-pointer"
+              className="p-2 rounded-full bg-white/[0.03] border border-white/[0.08] text-slate-400 hover:text-slate-100 hover:bg-white/[0.08] hover:border-white/20 transition-all cursor-pointer backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
               title={isMuted ? "Unmute Procedural Audio" : "Mute Sound"}
             >
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-orange-400" />}
@@ -228,7 +227,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
               <button
                 onClick={handleSwitchNetwork}
                 disabled={isSwitchingNetwork}
-                className="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg bg-amber-950/80 border border-amber-500/50 hover:border-amber-400 text-amber-300 font-mono text-[10px] uppercase font-bold transition-all cursor-pointer animate-pulse disabled:opacity-50"
+                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/40 hover:border-amber-400 text-amber-300 font-mono text-[10px] uppercase font-bold transition-all cursor-pointer animate-pulse disabled:opacity-50 backdrop-blur-xl shadow-[0_0_15px_rgba(245,158,11,0.15)]"
                 title="Switch to Sepolia Network"
               >
                 <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
@@ -242,47 +241,52 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
             {wallet.isConnected && wallet.address ? (
               <button
                 onClick={handleOpenAccount}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#121927] to-[#1A2438] border border-slate-700/80 hover:border-orange-500/60 transition-all text-xs cursor-pointer shadow-[0_0_12px_rgba(0,0,0,0.4)]"
-                title="Manage Web3 Wallet (Ethereum Sepolia)"
+                className="flex items-center space-x-2.5 px-3.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.1] hover:border-white/25 backdrop-blur-2xl transition-all cursor-pointer shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15),0_4px_16px_rgba(0,0,0,0.3)]"
+                title="Manage Web3 Wallet"
               >
-                <div className={`w-2 h-2 rounded-full ${wallet.isCorrectNetwork ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}`}></div>
-                <div className="flex flex-col text-left">
-                  <span className="font-mono-nums font-bold text-slate-100 text-[11px]">
-                    {effectiveBalance.toFixed(4)} SepoliaETH
-                  </span>
-                  <span className="text-[9px] font-mono text-slate-400 truncate max-w-[80px]">
-                    {wallet.address.slice(0, 6)}...{wallet.address.slice(-4)}
-                  </span>
-                </div>
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    wallet.isCorrectNetwork
+                      ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.7)] animate-pulse"
+                      : "bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.7)]"
+                  }`}
+                />
+                <span className="font-mono font-bold text-slate-100 text-xs">
+                  {effectiveBalance.toFixed(4)} ETH
+                </span>
+                <span className="w-px h-3 bg-white/20" />
+                <span className="font-mono text-slate-400 text-xs tracking-tight">
+                  {wallet.address.slice(0, 6)}...{wallet.address.slice(-4)}
+                </span>
               </button>
             ) : (
               <button
                 onClick={handleConnect}
                 disabled={wallet.isConnecting}
-                className="flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-slate-950 font-chakra font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(234,88,12,0.3)] cursor-pointer disabled:opacity-50"
+                className="flex items-center space-x-2 px-4 py-2 rounded-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-slate-950 font-chakra font-bold text-xs uppercase tracking-wider transition-all duration-200 shadow-[0_0_20px_rgba(234,88,12,0.35),inset_0_1px_0_0_rgba(255,255,255,0.3)] border border-orange-400/40 hover:scale-[1.02] active:scale-[0.98] cursor-pointer disabled:opacity-50"
               >
-                <Wallet className="w-3.5 h-3.5 text-slate-950" />
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-pulse" />
                 <span>{wallet.isConnecting ? "Connecting..." : "Connect Wallet"}</span>
               </button>
             )}
           </div>
         </div>
 
-        {/* Mobile Navigation bar */}
-        <div className="md:hidden flex items-center justify-around py-2 border-t border-slate-800/80 bg-[#090D15] text-[11px]">
+        {/* Mobile Navigation bar - Frosted Liquid Glass */}
+        <div className="md:hidden flex items-center justify-around py-2.5 px-2 border-t border-white/[0.06] bg-[#06080F]/80 backdrop-blur-2xl text-xs">
           {navLinks.map((item) => {
-            const Icon = item.icon;
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => sound.playClick()}
-                className={`flex flex-col items-center space-y-0.5 ${
-                  isActive ? "text-orange-400 font-bold" : "text-slate-400"
+                className={`px-3 py-1 rounded-full transition-all text-xs font-chakra tracking-wide ${
+                  isActive
+                    ? "bg-white/[0.1] text-orange-400 font-bold border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]"
+                    : "text-slate-400 hover:text-slate-200"
                 }`}
               >
-                <Icon className="w-4 h-4" />
                 <span>{item.label}</span>
               </Link>
             );
@@ -292,16 +296,16 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
 
       {/* Real Web3 Wallet Management Modal */}
       {showWalletModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md bg-[#0B0F18] border border-slate-800 rounded-xl p-5 text-slate-100 shadow-2xl">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+          <div className="w-full max-w-md bg-[#080C14]/95 border border-white/10 rounded-2xl p-5 text-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.8),inset_0_1px_0_0_rgba(255,255,255,0.1)] backdrop-blur-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
               <div className="flex items-center space-x-2">
-                <Wallet className="w-5 h-5 text-emerald-400" />
-                <h3 className="font-bold text-base">Ethereum Sepolia Web3 Account</h3>
+                <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                <h3 className="font-bold text-base font-chakra tracking-wide">Web3 Account Overview</h3>
               </div>
               <button
                 onClick={() => setShowWalletModal(false)}
-                className="text-slate-400 hover:text-slate-200 cursor-pointer"
+                className="text-slate-400 hover:text-slate-200 cursor-pointer p-1 rounded-full hover:bg-white/[0.06] transition-colors"
               >
                 ✕
               </button>
@@ -310,7 +314,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
             <div className="my-4 space-y-3 text-xs">
               {wallet.isConnected && wallet.address ? (
                 <>
-                  <div className="p-3 rounded-lg bg-[#111724] border border-slate-800 flex justify-between items-center">
+                  <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.08] flex justify-between items-center shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
                     <div>
                       <span className="text-slate-400 block text-[10px] uppercase font-mono">Connected Address:</span>
                       <span className="font-mono text-slate-200 font-bold text-xs break-all">
@@ -322,22 +326,26 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-cyan-400 hover:text-cyan-300 ml-2"
-                      title="View on Sepolia Etherscan"
+                      title="View on Explorer"
                     >
                       <ExternalLink className="w-4 h-4" />
                     </a>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="p-2.5 rounded-lg bg-[#111724] border border-slate-800">
-                      <span className="text-slate-400 block text-[10px] uppercase font-mono">SepoliaETH Balance</span>
+                    <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
+                      <span className="text-slate-400 block text-[10px] uppercase font-mono">ETH Balance</span>
                       <span className="font-mono font-bold text-sm text-emerald-400">
-                        {effectiveBalance.toFixed(4)} SepoliaETH
+                        {effectiveBalance.toFixed(4)} ETH
                       </span>
                     </div>
-                    <div className="p-2.5 rounded-lg bg-[#111724] border border-slate-800">
+                    <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
                       <span className="text-slate-400 block text-[10px] uppercase font-mono">Network Status</span>
-                      <span className={`font-mono font-bold text-xs flex items-center space-x-1 ${wallet.isCorrectNetwork ? "text-emerald-400" : "text-amber-400"}`}>
+                      <span
+                        className={`font-mono font-bold text-xs flex items-center space-x-1 ${
+                          wallet.isCorrectNetwork ? "text-emerald-400" : "text-amber-400"
+                        }`}
+                      >
                         <ShieldCheck className="w-3.5 h-3.5" />
                         <span>{wallet.isCorrectNetwork ? "Sepolia (#11155111)" : "Wrong Network"}</span>
                       </span>
@@ -345,7 +353,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                   </div>
 
                   {!wallet.isCorrectNetwork && (
-                    <div className="p-2.5 rounded-lg bg-amber-950/60 border border-amber-500/50 text-amber-200 text-xs flex items-center justify-between">
+                    <div className="p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
                         <span>Please switch your wallet to Ethereum Sepolia.</span>
@@ -353,18 +361,16 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                       <button
                         onClick={handleSwitchNetwork}
                         disabled={isSwitchingNetwork}
-                        className="px-2.5 py-1 rounded bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-[10px] uppercase cursor-pointer disabled:opacity-50"
+                        className="px-2.5 py-1 rounded-full bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-[10px] uppercase cursor-pointer disabled:opacity-50"
                       >
                         {isSwitchingNetwork ? "Switching..." : "Switch Network"}
                       </button>
                     </div>
                   )}
 
-                  <div className="p-3 rounded-lg bg-[#0E1320] border border-slate-800/80 text-[11px] text-slate-400 space-y-1">
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] text-[11px] text-slate-400 space-y-1">
                     <div className="font-bold text-slate-300">Need Free Sepolia Testnet ETH?</div>
-                    <div>
-                      Claim free Sepolia testnet ETH for gas & card packs:
-                    </div>
+                    <div>Claim free Sepolia testnet ETH for gas & card packs:</div>
                     <div className="flex flex-wrap gap-2 pt-1 font-mono text-[10px]">
                       <a
                         href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia"
@@ -399,7 +405,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                         refetchWagmiBalance?.();
                         walletStore.refreshBalance();
                       }}
-                      className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 cursor-pointer"
+                      className="px-3 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-xs font-semibold text-slate-300 cursor-pointer transition-colors"
                     >
                       Refresh Balance
                     </button>
@@ -408,7 +414,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                         walletStore.disconnect();
                         setShowWalletModal(false);
                       }}
-                      className="px-3 py-1.5 rounded bg-red-950/80 hover:bg-red-900 border border-red-500/40 text-xs font-semibold text-red-300 cursor-pointer"
+                      className="px-3 py-1.5 rounded-full bg-red-950/60 hover:bg-red-900/80 border border-red-500/40 text-xs font-semibold text-red-300 cursor-pointer transition-colors"
                     >
                       Disconnect Wallet
                     </button>
@@ -417,12 +423,13 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
               ) : (
                 <div className="py-4 text-center space-y-4">
                   <p className="text-xs text-slate-400">
-                    Connect your Web3 browser wallet (MetaMask, Rabby, Coinbase Wallet) to buy booster packs, mint verifiable cards on-chain, and participate in secondary trading.
+                    Connect your Web3 browser wallet (MetaMask, Rabby, Coinbase Wallet) to buy booster packs, mint
+                    verifiable cards on-chain, and participate in secondary trading.
                   </p>
                   <button
                     onClick={handleConnect}
                     disabled={wallet.isConnecting}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-slate-950 font-chakra font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(234,88,12,0.4)] cursor-pointer"
+                    className="w-full py-3 rounded-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-slate-950 font-chakra font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(234,88,12,0.4)] cursor-pointer"
                   >
                     {wallet.isConnecting ? "Awaiting Signature..." : "Connect MetaMask / EVM Wallet"}
                   </button>

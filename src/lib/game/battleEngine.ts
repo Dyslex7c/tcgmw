@@ -54,7 +54,7 @@ export function createInitialBattle(
     id: `log-${Date.now()}-0`,
     round: 1,
     sender: "system",
-    actorName: "MarketWars Referee",
+    actorName: "AVOX Referee",
     actionName: "Match Initiated",
     text: `Battle commenced vs ${oppProfile.name}! Live crypto price feeds are now driving in-match stats.`,
     timestamp: Date.now()

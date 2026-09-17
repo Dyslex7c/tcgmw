@@ -1,4 +1,4 @@
-# MarketWars — Technical Architecture & Protocol Documentation
+# AVOX — Technical Architecture & Protocol Documentation
 
 > **Next-Generation Web3 Trading Card Game (TCG) Powered by Live Market Volatility & Verifiable On-Chain Mechanics**  
 > **Network:** Ethereum Sepolia Testnet (Chain ID: `11155111`)  
@@ -12,10 +12,10 @@
 1. [Executive Summary](#1-executive-summary)
 2. [High-Level Architecture](#2-high-level-architecture)
 3. [Smart Contract System & On-Chain Deployments](#3-smart-contract-system--on-chain-deployments)
-   - [MarketWarsCard.sol (ERC-721)](#marketwarscardsol-erc-721)
-   - [MarketWarsPackVRF.sol (Pack Minting & VRF)](#marketwarspackvrfsol-pack-minting--vrf)
-   - [MarketWarsMarketplace.sol (Secondary Market)](#marketwarsmarketplacesol-secondary-market)
-   - [MarketWarsPrizePool.sol (Community Inflows)](#marketwarsprizepoolsol-community-inflows)
+   - [AvoxCard.sol (ERC-721)](#avoxcardsol-erc-721)
+   - [AvoxPackVRF.sol (Pack Minting & VRF)](#avoxpackvrfsol-pack-minting--vrf)
+   - [AvoxMarketplace.sol (Secondary Market)](#avoxmarketplacesol-secondary-market)
+   - [AvoxPrizePool.sol (Community Inflows)](#avoxprizepoolsol-community-inflows)
    - [On-Chain Permissions & Wiring](#on-chain-permissions--wiring)
 4. [Live Volatility Oracle & Stat Scaling Engine](#4-live-volatility-oracle--stat-scaling-engine)
    - [Mathematical Formula](#mathematical-formula)
@@ -47,11 +47,11 @@
 
 ## 1. Executive Summary
 
-**MarketWars** is an on-chain competitive trading card game that bridges decentralized finance (DeFi) market telemetry with tactical turn-based battle gameplay. 
+**AVOX** is an on-chain competitive trading card game that bridges decentralized finance (DeFi) market telemetry with tactical turn-based battle gameplay. 
 
-In traditional TCGs, card attributes remain static post-mint. MarketWars introduces **Live Volatility Scaling**: each card represents a real-world cryptocurrency (e.g., BTC, ETH, SOL, DOGE, AVAX, LINK, BNB, PEPE, NEAR, SUI). Mid-battle, the card’s base attack, defense, and speed values dynamically scale in real-time based on live 5-minute and 24-hour price deltas streamed from live market feeds. A rally in the underlying asset supercharges a card’s damage output, while market downturns weaken enemy barriers.
+In traditional TCGs, card attributes remain static post-mint. AVOX introduces **Live Volatility Scaling**: each card represents a real-world cryptocurrency (e.g., BTC, ETH, SOL, DOGE, AVAX, LINK, BNB, PEPE, NEAR, SUI). Mid-battle, the card’s base attack, defense, and speed values dynamically scale in real-time based on live 5-minute and 24-hour price deltas streamed from live market feeds. A rally in the underlying asset supercharges a card’s damage output, while market downturns weaken enemy barriers.
 
-Every asset within the MarketWars ecosystem is verifiable on Ethereum Sepolia:
+Every asset within the AVOX ecosystem is verifiable on Ethereum Sepolia:
 - **Cards** are standard ERC-721 tokens with immutable base stats minted on-chain.
 - **Pack Openings** execute directly against a Chainlink VRF-compatible smart contract, with verifiable seeds and cryptographic proof generation.
 - **Secondary Trading** occurs through a non-custodial atomic marketplace contract.
@@ -61,7 +61,7 @@ Every asset within the MarketWars ecosystem is verifiable on Ethereum Sepolia:
 
 ## 2. High-Level Architecture
 
-The MarketWars ecosystem consists of four synchronized architectural tiers:
+The AVOX ecosystem consists of four synchronized architectural tiers:
 
 ```mermaid
 flowchart TB
@@ -79,10 +79,10 @@ flowchart TB
     end
 
     subgraph Blockchain ["Ethereum Sepolia Testnet (Chain ID: 11155111)"]
-        CardContract["MarketWarsCard.sol\n(ERC-721 NFT)"]
-        PackContract["MarketWarsPackVRF.sol\n(Verifiable Pack Minting)"]
-        MarketContract["MarketWarsMarketplace.sol\n(Non-Custodial Trading)"]
-        PoolContract["MarketWarsPrizePool.sol\n(Seasonal Prize Pool)"]
+        CardContract["AvoxCard.sol\n(ERC-721 NFT)"]
+        PackContract["AvoxPackVRF.sol\n(Verifiable Pack Minting)"]
+        MarketContract["AvoxMarketplace.sol\n(Non-Custodial Trading)"]
+        PoolContract["AvoxPrizePool.sol\n(Seasonal Prize Pool)"]
     end
 
     subgraph Oracle ["Live Market Telemetry & Oracles"]
@@ -110,14 +110,14 @@ All 4 smart contracts are deployed and verified on **Ethereum Sepolia Testnet** 
 
 | Contract | Address | Explorer Link |
 | :--- | :--- | :--- |
-| **MarketWarsCard** | `0x209139a7c49a2ea834daf5ff496008ea02b2fbba` | [View on Etherscan](https://sepolia.etherscan.io/address/0x209139a7c49a2ea834daf5ff496008ea02b2fbba) |
-| **MarketWarsPackVRF** | `0x1dc2656a699c1bf6d827c555c994f5fd89e1ff75` | [View on Etherscan](https://sepolia.etherscan.io/address/0x1dc2656a699c1bf6d827c555c994f5fd89e1ff75) |
-| **MarketWarsMarketplace** | `0xb20655cb8160350ece1897a86ebbf832b4c26851` | [View on Etherscan](https://sepolia.etherscan.io/address/0xb20655cb8160350ece1897a86ebbf832b4c26851) |
-| **MarketWarsPrizePool** | `0xdb2db0f2bd83cfb8d5f1db480caf661978624f56` | [View on Etherscan](https://sepolia.etherscan.io/address/0xdb2db0f2bd83cfb8d5f1db480caf661978624f56) |
+| **AvoxCard** | `0x209139a7c49a2ea834daf5ff496008ea02b2fbba` | [View on Etherscan](https://sepolia.etherscan.io/address/0x209139a7c49a2ea834daf5ff496008ea02b2fbba) |
+| **AvoxPackVRF** | `0x1dc2656a699c1bf6d827c555c994f5fd89e1ff75` | [View on Etherscan](https://sepolia.etherscan.io/address/0x1dc2656a699c1bf6d827c555c994f5fd89e1ff75) |
+| **AvoxMarketplace** | `0xb20655cb8160350ece1897a86ebbf832b4c26851` | [View on Etherscan](https://sepolia.etherscan.io/address/0xb20655cb8160350ece1897a86ebbf832b4c26851) |
+| **AvoxPrizePool** | `0xdb2db0f2bd83cfb8d5f1db480caf661978624f56` | [View on Etherscan](https://sepolia.etherscan.io/address/0xdb2db0f2bd83cfb8d5f1db480caf661978624f56) |
 
 ---
 
-### MarketWarsCard.sol (ERC-721)
+### AvoxCard.sol (ERC-721)
 The core NFT contract governing all collectible battle cards. Implements ERC-721 with immutable base attribute storage.
 
 - **Storage Structure**:
@@ -133,7 +133,7 @@ The core NFT contract governing all collectible battle cards. Implements ERC-721
   }
   ```
 - **Access Control**:
-  - `mintCard(...)` is restricted to authorized minters (`onlyMinter`), granting the `MarketWarsPackVRF` contract exclusive minting permissions.
+  - `mintCard(...)` is restricted to authorized minters (`onlyMinter`), granting the `AvoxPackVRF` contract exclusive minting permissions.
   - `setPackContract(...)` and `setMarketplaceContract(...)` allow the owner to wire dependent game contracts.
 - **Events**:
   - `event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)`
@@ -142,7 +142,7 @@ The core NFT contract governing all collectible battle cards. Implements ERC-721
 
 ---
 
-### MarketWarsPackVRF.sol (Pack Minting & VRF)
+### AvoxPackVRF.sol (Pack Minting & VRF)
 Governs booster pack purchases, verifiable randomness, and card minting.
 
 - **Pack Configurations**:
@@ -152,7 +152,7 @@ Governs booster pack purchases, verifiable randomness, and card minting.
 - **Core Functions**:
   - `buyPack(PackTier tier) external payable returns (uint256)`:
     1. Validates sufficient `msg.value` matching the tier price.
-    2. Routes 20% of `msg.value` directly to `MarketWarsPrizePool.recordInflow`.
+    2. Routes 20% of `msg.value` directly to `AvoxPrizePool.recordInflow`.
     3. Generates unique `requestId` and records the purchase.
     4. Executes `_fulfillPack(...)` to roll on-chain randomness, determine rarities, foils, and asset symbols, and calls `cardContract.mintCard(...)` for each card.
   - `getRequest(uint256 requestId) external view returns (PackRequest memory)`: Enables off-chain proof inspection.
@@ -162,7 +162,7 @@ Governs booster pack purchases, verifiable randomness, and card minting.
 
 ---
 
-### MarketWarsMarketplace.sol (Secondary Market)
+### AvoxMarketplace.sol (Secondary Market)
 Facilitates peer-to-peer trading of minted ERC-721 cards without intermediary custody until listing settlement.
 
 - **Trading Mechanics**:
@@ -181,12 +181,12 @@ Facilitates peer-to-peer trading of minted ERC-721 cards without intermediary cu
 
 ---
 
-### MarketWarsPrizePool.sol (Community Inflows)
+### AvoxPrizePool.sol (Community Inflows)
 A transparent community treasury contract that pools player inflows and distributes seasonal competitive rewards.
 
 - **Inflow Sources**:
-  - Automatic 20% cut from every booster pack purchased via `MarketWarsPackVRF`.
-  - Automatic 2.5% trading fee from every secondary market sale via `MarketWarsMarketplace`.
+  - Automatic 20% cut from every booster pack purchased via `AvoxPackVRF`.
+  - Automatic 2.5% trading fee from every secondary market sale via `AvoxMarketplace`.
   - Direct community donations via fallback `receive()` function.
 - **Core Functions**:
   - `recordInflow(string calldata source) external payable`: Only callable by authorized pack or marketplace contracts.
@@ -201,15 +201,15 @@ A transparent community treasury contract that pools player inflows and distribu
 ### On-Chain Permissions & Wiring
 
 Smart contract permissions are configured via [`contracts/deploy.ts`](file:///Users/riteshdas/Documents/personal/marketwars/contracts/deploy.ts):
-1. `card.setPackContract(packAddress)`: Grants `MarketWarsPackVRF` exclusive rights to mint new cards.
-2. `card.setMarketplaceContract(marketplaceAddress)`: Authorizes `MarketWarsMarketplace` for atomic transfers.
+1. `card.setPackContract(packAddress)`: Grants `AvoxPackVRF` exclusive rights to mint new cards.
+2. `card.setMarketplaceContract(marketplaceAddress)`: Authorizes `AvoxMarketplace` for atomic transfers.
 3. `prizePool.setAuthorizedContracts(packAddress, marketplaceAddress)`: Authorizes both contracts to call `recordInflow`.
 
 ---
 
 ## 4. Live Volatility Oracle & Stat Scaling Engine
 
-MarketWars integrates real-time crypto price movement directly into game statistics.
+AVOX integrates real-time crypto price movement directly into game statistics.
 
 ### Mathematical Formula
 
@@ -322,7 +322,7 @@ The secondary marketplace operates with non-custodial listings:
 2. **Purchase Settlement**:
    - The buyer calls `buyCard(tokenId)` sending exact SepoliaETH.
    - The contract verifies the listing is active.
-   - 2.5% protocol fee is routed directly to `MarketWarsPrizePool`.
+   - 2.5% protocol fee is routed directly to `AvoxPrizePool`.
    - 97.5% net proceeds are transferred to the seller.
    - The NFT is transferred to the buyer's wallet.
    - Both user collections update in real time.
@@ -331,7 +331,7 @@ The secondary marketplace operates with non-custodial listings:
 
 ## 8. Web3 Connectivity & Reown AppKit Integration
 
-MarketWars uses **Reown AppKit** (`@reown/appkit` + `@reown/appkit-adapter-wagmi`) to provide non-custodial wallet connectivity.
+AVOX uses **Reown AppKit** (`@reown/appkit` + `@reown/appkit-adapter-wagmi`) to provide non-custodial wallet connectivity.
 
 ### Multi-Chain Handling & Network Switching
 
@@ -477,4 +477,4 @@ marketwars/
 
 ---
 
-*MarketWars Architecture & Technical Specification — Maintained for Ethereum Sepolia Testnet.*
+*AVOX Architecture & Technical Specification — Maintained for Ethereum Sepolia Testnet.*

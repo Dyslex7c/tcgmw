@@ -6,7 +6,7 @@ import { marketService } from "./market/priceFeed";
 import { CONTRACT_CONFIG } from "./constants/contracts";
 import { getBotOpponent, matchmaker, AI_BOT_ROSTER } from "./game/matchmaking";
 
-console.log("=== RUNNING MARKETWARS CORE ENGINE VALIDATION ===");
+console.log("=== RUNNING AVOX CORE ENGINE VALIDATION ===");
 
 // 1. Test Stat Modifier Clamping
 const btcCard = BASE_CARD_CATALOG[0];

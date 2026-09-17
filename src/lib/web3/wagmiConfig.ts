@@ -9,7 +9,8 @@ export const networks = [sepolia, mainnet, arbitrum, base, polygon, optimism] as
 
 export const wagmiAdapter = new WagmiAdapter({
   projectId,
-  networks
+  networks,
+  ssr: true
 });
 
 export const wagmiConfig = wagmiAdapter.wagmiConfig;

@@ -60,7 +60,9 @@ class UserStore {
 
   private loadSavedState() {
     try {
-      const saved = localStorage.getItem("marketwars_user_profile");
+      const saved =
+        localStorage.getItem("avox_user_profile") ||
+        localStorage.getItem("marketwars_user_profile");
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && Array.isArray(parsed.collection) && parsed.collection.length > 0) {
@@ -80,7 +82,7 @@ class UserStore {
   private saveState() {
     if (typeof window === "undefined") return;
     try {
-      localStorage.setItem("marketwars_user_profile", JSON.stringify({
+      localStorage.setItem("avox_user_profile", JSON.stringify({
         collection: this.profile.collection,
         deckCardIds: this.profile.deckCardIds,
         wins: this.profile.wins,
@@ -182,7 +184,7 @@ class UserStore {
   }
 
   /**
-   * Syncs user cards from MarketWarsCard ERC-721 contract on Sepolia
+   * Syncs user cards from AvoxCard ERC-721 contract on Sepolia
    */
   public async syncWithOnChainCards(address: string) {
     if (!address || !address.startsWith("0x")) return;
