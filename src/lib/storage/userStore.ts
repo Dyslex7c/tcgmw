@@ -33,7 +33,7 @@ class UserStore {
     address: "Not Connected",
     isGuest: false,
     ethBalance: 0,
-    avoxBalance: 100,
+    avoxBalance: 0,
     collection: [
       BASE_CARD_CATALOG[0], // BTC
       BASE_CARD_CATALOG[1], // ETH
@@ -71,7 +71,7 @@ class UserStore {
           this.profile.wins = parsed.wins || 0;
           this.profile.losses = parsed.losses || 0;
           this.profile.ratingMMR = parsed.ratingMMR || 1200;
-          this.profile.avoxBalance = typeof parsed.avoxBalance === "number" ? parsed.avoxBalance : 100;
+          this.profile.avoxBalance = typeof parsed.avoxBalance === "number" ? parsed.avoxBalance : 0;
         }
       }
     } catch {
@@ -184,7 +184,7 @@ class UserStore {
   }
 
   /**
-   * Syncs user cards from AvoxCard ERC-721 contract on Sepolia
+   * Syncs user cards from AvoxCard ERC-721 contract on Robinhood Chain Testnet
    */
   public async syncWithOnChainCards(address: string) {
     if (!address || !address.startsWith("0x")) return;

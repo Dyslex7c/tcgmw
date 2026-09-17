@@ -61,7 +61,7 @@ export function PackOpeningStage() {
     // Check balance against requested tier
     if (wallet.ethBalance < targetConfig.priceEth) {
       setErrorMessage(
-        `Insufficient SepoliaETH balance (${wallet.ethBalance.toFixed(4)} SepoliaETH). You need at least ${targetConfig.priceEth} SepoliaETH to buy a ${targetConfig.name}. Please claim free testnet funds from a Sepolia faucet below.`
+        `Insufficient ETH balance (${wallet.ethBalance.toFixed(4)} ETH). You need at least ${targetConfig.priceEth} ETH to buy a ${targetConfig.name}. Please claim free testnet funds from a Robinhood faucet below.`
       );
       return;
     }
@@ -74,7 +74,7 @@ export function PackOpeningStage() {
       // Step 1: Send on-chain transaction to AvoxPackVRF
       const txHash = await buyPackOnChain(tierToBuy, currentAddr as `0x${string}`);
       setPendingTxHash(txHash);
-      setVrfStatusText("Transaction broadcast! Awaiting Ethereum Sepolia confirmation & VRF fulfillment...");
+      setVrfStatusText("Transaction broadcast! Awaiting Robinhood Chain Testnet confirmation & VRF fulfillment...");
 
       // Step 2: Await fulfillment and read minted NFTs from contract
       const { cards, proof } = await waitForPackFulfillment(txHash);
@@ -98,9 +98,9 @@ export function PackOpeningStage() {
       ) {
         userMsg = "Transaction was cancelled in your Web3 wallet.";
       } else if (userMsg.includes("insufficient funds") || userMsg.includes("exceeds balance")) {
-        userMsg = `Insufficient SepoliaETH balance (${wallet.ethBalance.toFixed(4)} SepoliaETH) to cover pack cost and gas fees. Please claim free testnet SepoliaETH from a faucet.`;
+        userMsg = `Insufficient balance (${wallet.ethBalance.toFixed(4)} ETH) to cover pack cost and gas fees. Please claim free testnet ETH from the Robinhood faucet.`;
       } else if (userMsg.includes("switch your wallet")) {
-        userMsg = "Please switch your wallet to Ethereum Sepolia network (Chain ID: 11155111).";
+        userMsg = "Please switch your wallet to Robinhood Chain Testnet (Chain ID: 46630).";
       }
 
       setErrorMessage(userMsg);
@@ -159,23 +159,14 @@ export function PackOpeningStage() {
             <span className="leading-relaxed">{errorMessage}</span>
             {errorMessage.toLowerCase().includes("faucet") && (
               <div className="mt-3 flex flex-wrap items-center gap-2 pt-2 border-t border-red-800/40">
-                <span className="text-[11px] text-red-300 font-bold">Claim Free SepoliaETH:</span>
+                <span className="text-[11px] text-red-300 font-bold">Claim Free Robinhood ETH:</span>
                 <a
-                  href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia"
+                  href="https://faucet.testnet.chain.robinhood.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-2.5 py-1 rounded-md bg-red-900/60 hover:bg-red-800 border border-red-700/60 text-cyan-300 text-[11px] font-mono inline-flex items-center space-x-1"
                 >
-                  <span>Google Cloud Faucet</span>
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-                <a
-                  href="https://faucet.quicknode.com/ethereum/sepolia"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-2.5 py-1 rounded-md bg-red-900/60 hover:bg-red-800 border border-red-700/60 text-cyan-300 text-[11px] font-mono inline-flex items-center space-x-1"
-                >
-                  <span>QuickNode Faucet</span>
+                  <span>Robinhood Faucet</span>
                   <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
@@ -202,7 +193,7 @@ export function PackOpeningStage() {
               Booster Pack Cryptographic Opening
             </h1>
             <p className="text-sm text-slate-400 max-w-xl mx-auto mt-2">
-              Cards are minted directly as ERC-721 NFTs on Ethereum Sepolia. 20% of every pack purchase automatically fuels the transparent prize pool.
+              Cards are minted directly as ERC-721 NFTs on Robinhood Chain Testnet. 20% of every pack purchase automatically fuels the transparent prize pool.
             </p>
 
             {/* Wallet Status Banner */}
@@ -210,14 +201,14 @@ export function PackOpeningStage() {
               <Wallet className="w-3.5 h-3.5 text-emerald-400" />
               {wallet.isConnected ? (
                 <span className="text-slate-300">
-                  Connected: <span className="text-emerald-400 font-bold">{wallet.address?.slice(0, 6)}...{wallet.address?.slice(-4)}</span> | Balance: <span className="text-emerald-400 font-bold">{wallet.ethBalance.toFixed(4)} SepoliaETH</span>
+                  Connected: <span className="text-emerald-400 font-bold">{wallet.address?.slice(0, 6)}...{wallet.address?.slice(-4)}</span> | Balance: <span className="text-emerald-400 font-bold">{wallet.ethBalance.toFixed(4)} ETH</span>
                 </span>
               ) : (
                 <button
                   onClick={() => walletStore.connect()}
                   className="text-orange-400 hover:text-orange-300 font-bold underline"
                 >
-                  Connect Web3 Wallet (Sepolia)
+                  Connect Web3 Wallet (Robinhood)
                 </button>
               )}
             </div>
@@ -300,7 +291,7 @@ export function PackOpeningStage() {
                   <div>
                     <div className="flex items-baseline justify-between mb-3">
                       <span className="text-xs text-slate-400">On-Chain Price:</span>
-                      <span className="text-lg font-bold font-mono text-emerald-400">{cfg.priceEth} SepoliaETH</span>
+                      <span className="text-lg font-bold font-mono text-emerald-400">{cfg.priceEth} ETH</span>
                     </div>
 
                     <button
@@ -312,7 +303,7 @@ export function PackOpeningStage() {
                       className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 font-bold text-slate-950 text-xs uppercase tracking-wider flex items-center justify-center space-x-1.5 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all cursor-pointer"
                     >
                       <Zap className="w-4 h-4" />
-                      <span>Mint & Open on Sepolia</span>
+                      <span>Mint & Open on Robinhood</span>
                     </button>
                   </div>
                 </div>
@@ -343,7 +334,7 @@ export function PackOpeningStage() {
               rel="noopener noreferrer"
               className="mt-4 px-3 py-1.5 rounded bg-[#111724] border border-slate-700 text-cyan-400 hover:text-cyan-300 text-xs font-mono inline-flex items-center space-x-1 underline"
             >
-              <span>View Sepolia TX ({pendingTxHash.slice(0, 10)}...{pendingTxHash.slice(-8)})</span>
+              <span>View Robinhood TX ({pendingTxHash.slice(0, 10)}...{pendingTxHash.slice(-8)})</span>
               <ExternalLink className="w-3 h-3" />
             </a>
           )}

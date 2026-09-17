@@ -1,7 +1,7 @@
 import { PrizeInflowRecord } from "@/types";
-import { publicClient, getBrowserWalletClient, prizePoolContractConfig, ensureSepoliaNetwork } from "@/lib/web3/client";
+import { publicClient, getBrowserWalletClient, prizePoolContractConfig, ensureRobinhoodNetwork } from "@/lib/web3/client";
 import { formatEther, parseEther } from "viem";
-import { sepolia } from "viem/chains";
+import { robinhoodTestnet } from "@/lib/web3/chains";
 
 export interface PrizePoolOnChainState {
   currentSeasonPool: number;
@@ -52,7 +52,7 @@ class PrizePoolStore {
   }
 
   /**
-   * Reads the real on-chain prize pool state directly from Ethereum Sepolia
+   * Reads the real on-chain prize pool state directly from Robinhood Chain Testnet
    */
   public async refreshFromContract() {
     try {
@@ -109,12 +109,12 @@ class PrizePoolStore {
   }
 
   /**
-   * Allows any player to donate or bootstrap the on-chain prize pool with Sepolia ETH
+   * Allows any player to donate or bootstrap the on-chain prize pool with Robinhood ETH
    */
   public async donateToPrizePool(amountEth: number, senderAddress: `0x${string}`) {
-    const isSepolia = await ensureSepoliaNetwork();
-    if (!isSepolia) {
-      throw new Error("Please connect your wallet to Ethereum Sepolia.");
+    const isRobinhood = await ensureRobinhoodNetwork();
+    if (!isRobinhood) {
+      throw new Error("Please connect your wallet to Robinhood Chain Testnet.");
     }
 
     const walletClient = await getBrowserWalletClient();
@@ -129,7 +129,7 @@ class PrizePoolStore {
       args: ["Direct Player Donation"],
       value: valueWei,
       account: senderAddress,
-      chain: sepolia,
+      chain: robinhoodTestnet,
       gas: BigInt(150_000)
     });
 

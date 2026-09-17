@@ -7,7 +7,7 @@ import {
   PublicClient,
   WalletClient
 } from "viem";
-import { sepolia } from "viem/chains";
+import { robinhoodTestnet } from "./chains";
 import { CONTRACT_CONFIG } from "@/lib/constants/contracts";
 import {
   AvoxCardABI,
@@ -19,19 +19,18 @@ import {
 import { getWalletClient, switchChain, getChainId } from "wagmi/actions";
 import { wagmiConfig, projectId } from "./wagmiConfig";
 
-// High-reliability fallback RPC endpoints for Ethereum Sepolia
-export const SEPOLIA_RPC_URLS = [
-  "https://gateway.tenderly.co/public/sepolia",
-  "https://1rpc.io/sepolia",
-  "https://ethereum-sepolia-rpc.publicnode.com"
+// RPC endpoints for Robinhood Chain Testnet (Chain ID: 46630)
+export const ROBINHOOD_TESTNET_RPC_URLS = [
+  CONTRACT_CONFIG.rpcUrl,
+  "https://rpc.testnet.chain.robinhood.com"
 ];
 
 /**
- * Global viem Public Client for reading smart contract state on Sepolia
+ * Global viem Public Client for reading smart contract state on Robinhood Chain Testnet
  */
 export const publicClient: PublicClient = createPublicClient({
-  chain: sepolia,
-  transport: fallback(SEPOLIA_RPC_URLS.map((url) => http(url, { timeout: 10_000 })))
+  chain: robinhoodTestnet,
+  transport: fallback(ROBINHOOD_TESTNET_RPC_URLS.map((url) => http(url, { timeout: 10_000 })))
 });
 
 /**
@@ -53,7 +52,7 @@ export async function getBrowserWalletClient(): Promise<WalletClient | null> {
 
   if ((window as any).ethereum) {
     return createWalletClient({
-      chain: sepolia,
+      chain: robinhoodTestnet,
       transport: custom((window as any).ethereum)
     });
   }
@@ -62,14 +61,14 @@ export async function getBrowserWalletClient(): Promise<WalletClient | null> {
 }
 
 /**
- * Ensures the connected wallet is on Ethereum Sepolia (Chain ID: 11155111 / 0xaa36a7)
+ * Ensures the connected wallet is on Robinhood Chain Testnet (Chain ID: 46630)
  */
-export async function ensureSepoliaNetwork(): Promise<boolean> {
+export async function ensureRobinhoodNetwork(): Promise<boolean> {
   if (typeof window === "undefined") {
     return false;
   }
 
-  // 1. Check if wagmi is already on Sepolia
+  // 1. Check if wagmi is already on Robinhood Chain Testnet
   try {
     const activeChainId = getChainId(wagmiConfig);
     if (activeChainId === CONTRACT_CONFIG.chainId) {
@@ -90,11 +89,11 @@ export async function ensureSepoliaNetwork(): Promise<boolean> {
 
   try {
     const currentChainId = await ethereum.request({ method: "eth_chainId" });
-    const sepoliaChainIdHex = "0x" + CONTRACT_CONFIG.chainId.toString(16);
+    const robinhoodChainIdHex = "0x" + CONTRACT_CONFIG.chainId.toString(16);
 
     if (
       currentChainId &&
-      (currentChainId.toLowerCase() === sepoliaChainIdHex.toLowerCase() ||
+      (currentChainId.toLowerCase() === robinhoodChainIdHex.toLowerCase() ||
         parseInt(currentChainId, 16) === CONTRACT_CONFIG.chainId)
     ) {
       return true;
@@ -103,7 +102,7 @@ export async function ensureSepoliaNetwork(): Promise<boolean> {
     try {
       await ethereum.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: sepoliaChainIdHex }]
+        params: [{ chainId: robinhoodChainIdHex }]
       });
       return true;
     } catch (switchError: any) {
@@ -118,11 +117,11 @@ export async function ensureSepoliaNetwork(): Promise<boolean> {
           method: "wallet_addEthereumChain",
           params: [
             {
-              chainId: sepoliaChainIdHex,
+              chainId: robinhoodChainIdHex,
               chainName: CONTRACT_CONFIG.chainName,
               nativeCurrency: {
-                name: "Sepolia Ether",
-                symbol: "SEP",
+                name: "Ether",
+                symbol: "ETH",
                 decimals: 18
               },
               rpcUrls: [CONTRACT_CONFIG.rpcUrl],
@@ -135,10 +134,14 @@ export async function ensureSepoliaNetwork(): Promise<boolean> {
       throw switchError;
     }
   } catch (err) {
-    console.error("Failed to switch/add Sepolia network:", err);
+    console.error("Failed to switch/add Robinhood Testnet network:", err);
     return false;
   }
 }
+
+// Aliases for network naming
+export const ensureSepoliaNetwork = ensureRobinhoodNetwork;
+export const ensureGameNetwork = ensureRobinhoodNetwork;
 
 // Contract typed configurations
 export const cardContractConfig = {

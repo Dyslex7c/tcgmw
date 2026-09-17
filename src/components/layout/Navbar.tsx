@@ -31,7 +31,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
   const [isMuted, setIsMuted] = useState(sound.getMuted());
   const [showWalletModal, setShowWalletModal] = useState(false);
 
-  // Dedicated reactive balance query targeting Ethereum Sepolia (Chain ID: 11155111)
+  // Dedicated reactive balance query targeting Robinhood Chain Testnet (Chain ID: 46630)
   const { data: wagmiBalance, refetch: refetchWagmiBalance } = useBalance({
     address: wallet.address ? (wallet.address as `0x${string}`) : undefined,
     chainId: CONTRACT_CONFIG.chainId
@@ -212,7 +212,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                 className="w-4 h-4 object-contain group-hover:scale-110 transition-transform duration-200"
               />
               <span className="font-mono font-bold text-orange-400 text-xs">
-                {profile.avoxBalance ?? 100}
+                0
               </span>
               <span className="font-chakra text-[10px] text-slate-400 uppercase tracking-widest font-semibold">
                 AVOX
@@ -228,17 +228,17 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-orange-400" />}
             </button>
 
-            {/* Wrong Network Indicator if connected but not Sepolia */}
+            {/* Wrong Network Indicator if connected but not Robinhood Testnet */}
             {wallet.isConnected && wallet.address && !wallet.isCorrectNetwork && (
               <button
                 onClick={handleSwitchNetwork}
                 disabled={isSwitchingNetwork}
                 className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/40 hover:border-amber-400 text-amber-300 font-mono text-[10px] uppercase font-bold transition-all cursor-pointer animate-pulse disabled:opacity-50 backdrop-blur-xl shadow-[0_0_15px_rgba(245,158,11,0.15)]"
-                title="Switch to Sepolia Network"
+                title="Switch to Robinhood Chain Testnet"
               >
                 <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
                 <span className="hidden sm:inline">
-                  {isSwitchingNetwork ? "Switching..." : "Switch to Sepolia"}
+                  {isSwitchingNetwork ? "Switching..." : "Switch to Robinhood"}
                 </span>
               </button>
             )}
@@ -356,7 +356,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                         }`}
                       >
                         <ShieldCheck className="w-3.5 h-3.5" />
-                        <span>{wallet.isCorrectNetwork ? "Sepolia (#11155111)" : "Wrong Network"}</span>
+                        <span>{wallet.isCorrectNetwork ? "Robinhood Testnet (#46630)" : "Wrong Network"}</span>
                       </span>
                     </div>
                   </div>
@@ -365,7 +365,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                     <div className="p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
-                        <span>Please switch your wallet to Ethereum Sepolia.</span>
+                        <span>Please switch your wallet to Robinhood Chain Testnet.</span>
                       </div>
                       <button
                         onClick={handleSwitchNetwork}
@@ -378,32 +378,24 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                   )}
 
                   <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] text-[11px] text-slate-400 space-y-1">
-                    <div className="font-bold text-slate-300">Need Free Sepolia Testnet ETH?</div>
-                    <div>Claim free Sepolia testnet ETH for gas & card packs:</div>
+                    <div className="font-bold text-slate-300">Need Free Robinhood Testnet ETH?</div>
+                    <div>Claim free Robinhood testnet ETH for gas & card packs:</div>
                     <div className="flex flex-wrap gap-2 pt-1 font-mono text-[10px]">
                       <a
-                        href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia"
+                        href="https://faucet.testnet.chain.robinhood.com"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-cyan-400 underline hover:text-cyan-300"
                       >
-                        Google Cloud Faucet ↗
+                        Robinhood Testnet Faucet ↗
                       </a>
                       <a
-                        href="https://sepoliafaucet.com"
+                        href="https://explorer.testnet.chain.robinhood.com"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-cyan-400 underline hover:text-cyan-300"
                       >
-                        Alchemy Faucet ↗
-                      </a>
-                      <a
-                        href="https://faucet.quicknode.com/ethereum/sepolia"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-cyan-400 underline hover:text-cyan-300"
-                      >
-                        QuickNode Faucet ↗
+                        Robinhood Explorer ↗
                       </a>
                     </div>
                   </div>

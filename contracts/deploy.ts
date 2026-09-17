@@ -6,10 +6,33 @@ import {
   http,
   formatEther,
   Address,
-  Hex
+  Hex,
+  defineChain
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { sepolia, baseSepolia, arbitrumSepolia, hardhat } from "viem/chains";
+import { hardhat } from "viem/chains";
+
+const robinhoodTestnet = defineChain({
+  id: 46630,
+  name: "Robinhood Chain Testnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH"
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.testnet.chain.robinhood.com"]
+    }
+  },
+  blockExplorers: {
+    default: {
+      name: "Robinhood Explorer",
+      url: "https://explorer.testnet.chain.robinhood.com"
+    }
+  },
+  testnet: true
+});
 
 function loadEnv() {
   const envPath = path.resolve(__dirname, ".env");
@@ -110,39 +133,15 @@ export async function main() {
   const account = privateKeyToAccount(privateKey);
   console.log("👤 Deployer Account: " + account.address);
 
-  // Auto-detect chain or use specified flags
-  let targetChain: any = sepolia;
-  let rpcUrl = env.SEPOLIA_RPC || "https://ethereum-sepolia-rpc.publicnode.com";
-  let explorer = "https://sepolia.etherscan.io";
+  // Target network: Robinhood Chain Testnet (or local)
+  let targetChain: any = robinhoodTestnet;
+  let rpcUrl = env.ROBINHOOD_RPC || "https://rpc.testnet.chain.robinhood.com";
+  let explorer = "https://explorer.testnet.chain.robinhood.com";
 
   if (isTargetLocal) {
     targetChain = { ...hardhat, id: 31337 } as any;
     rpcUrl = "http://127.0.0.1:8545";
     explorer = "http://localhost:8545";
-  } else if (isBase) {
-    targetChain = baseSepolia;
-    rpcUrl = env.BASE_SEPOLIA_RPC || "https://sepolia.base.org";
-    explorer = "https://sepolia.basescan.org";
-  } else if (isArbitrum) {
-    targetChain = arbitrumSepolia;
-    rpcUrl = env.ARBITRUM_SEPOLIA_RPC || "https://sepolia-rollup.arbitrum.io/rpc";
-    explorer = "https://sepolia.arbiscan.io";
-  } else {
-    // Check balance on Sepolia first, then Base Sepolia
-    const testSepolia = createPublicClient({ chain: sepolia, transport: http(rpcUrl) });
-    const balSepolia = await testSepolia.getBalance({ address: account.address });
-    if (balSepolia > BigInt(0)) {
-      targetChain = sepolia;
-      explorer = "https://sepolia.etherscan.io";
-    } else {
-      const testBase = createPublicClient({ chain: baseSepolia, transport: http(env.BASE_SEPOLIA_RPC || "https://sepolia.base.org") });
-      const balBase = await testBase.getBalance({ address: account.address });
-      if (balBase > BigInt(0)) {
-        targetChain = baseSepolia;
-        rpcUrl = env.BASE_SEPOLIA_RPC || "https://sepolia.base.org";
-        explorer = "https://sepolia.basescan.org";
-      }
-    }
   }
 
   console.log("🌐 Target Network: " + targetChain.name + " (Chain ID: " + targetChain.id + ")");

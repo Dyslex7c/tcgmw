@@ -129,11 +129,11 @@ export function Footer({ onOpenSimulator }: FooterProps) {
                 Deployment Networks:
               </div>
               <div className="flex flex-wrap items-center gap-2 text-slate-400 font-inconsolata">
-                <span className="text-orange-400 font-bold">Sepolia #11155111</span>
+                <span className="text-orange-400 font-bold">Robinhood Testnet #46630</span>
                 <span className="text-slate-600">•</span>
-                <span>Base Sepolia #84532</span>
+                <span>Ethereum</span>
                 <span className="text-slate-600">•</span>
-                <span>Arbitrum Sepolia #421614</span>
+                <span>Base</span>
               </div>
             </div>
           </div>

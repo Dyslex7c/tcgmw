@@ -82,7 +82,7 @@ export function MarketplaceView() {
     const currentAddr = wallet.address;
 
     if (wallet.ethBalance < buyingListing.priceEth) {
-      alert(`Insufficient SepoliaETH balance (${wallet.ethBalance.toFixed(4)} SepoliaETH). You need ${buyingListing.priceEth} SepoliaETH.`);
+      alert(`Insufficient ETH balance (${wallet.ethBalance.toFixed(4)} ETH). You need ${buyingListing.priceEth} ETH.`);
       return;
     }
 
@@ -123,7 +123,7 @@ export function MarketplaceView() {
     if (!cardToList) return;
     const price = parseFloat(listPriceInput);
     if (isNaN(price) || price <= 0) {
-      alert("Enter a valid price in SepoliaETH");
+      alert("Enter a valid price in ETH");
       return;
     }
 
@@ -213,7 +213,7 @@ export function MarketplaceView() {
               </h1>
               <div className="flex flex-wrap items-center gap-2 mt-1">
                 <p className="text-xs text-slate-400">
-                  Trade verified AVOX cards on Sepolia. 2.5% protocol fee automatically funds the Seasonal Prize Pool.
+                  Trade verified AVOX cards on Robinhood Testnet. 2.5% protocol fee automatically funds the Seasonal Prize Pool.
                 </p>
                 <a
                   href={getExplorerAddressUrl(CONTRACT_CONFIG.marketplaceContract)}
@@ -330,7 +330,7 @@ export function MarketplaceView() {
                 <div className="flex items-baseline justify-between">
                   <span className="text-xs text-slate-400">Listing Price:</span>
                   <span className="font-mono font-black text-emerald-400 text-base">
-                    {item.priceEth} SepoliaETH
+                    {item.priceEth} ETH
                   </span>
                 </div>
 
@@ -364,7 +364,7 @@ export function MarketplaceView() {
 
       {filteredListings.length === 0 && (
         <div className="text-center py-20 text-slate-500 text-xs font-mono space-y-2">
-          <div>No cards currently listed matching your criteria on the Sepolia marketplace.</div>
+          <div>No cards currently listed matching your criteria on the Robinhood marketplace.</div>
           <div className="text-slate-400">Mint a pack or click "List a Card for Sale" to create the first listing!</div>
         </div>
       )}
@@ -381,21 +381,21 @@ export function MarketplaceView() {
           <div className="w-full max-w-md bg-[#0B0F18] border border-slate-800 rounded-2xl p-6 text-slate-100 shadow-2xl">
             <h3 className="font-bold text-lg mb-2">Confirm Card Purchase</h3>
             <p className="text-xs text-slate-400 mb-4">
-              You are purchasing <strong>{buyingListing.card.name} (#{buyingListing.card.tokenId})</strong> on Ethereum Sepolia.
+              You are purchasing <strong>{buyingListing.card.name} (#{buyingListing.card.tokenId})</strong> on Robinhood Chain Testnet.
             </p>
 
             <div className="p-3 rounded-lg bg-[#111724] border border-slate-800 space-y-2 text-xs font-mono mb-4">
               <div className="flex justify-between">
                 <span className="text-slate-400">Card Price:</span>
-                <span className="text-slate-100 font-bold">{buyingListing.priceEth} SepoliaETH</span>
+                <span className="text-slate-100 font-bold">{buyingListing.priceEth} ETH</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-400">Prize Pool Cut (2.5%):</span>
-                <span className="text-emerald-400">{(buyingListing.priceEth * 0.025).toFixed(5)} SepoliaETH</span>
+                <span className="text-emerald-400">{(buyingListing.priceEth * 0.025).toFixed(5)} ETH</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-400">Seller Net Proceeds:</span>
-                <span className="text-slate-100">{(buyingListing.priceEth * 0.975).toFixed(5)} SepoliaETH</span>
+                <span className="text-slate-100">{(buyingListing.priceEth * 0.975).toFixed(5)} ETH</span>
               </div>
             </div>
 
@@ -412,7 +412,7 @@ export function MarketplaceView() {
                 disabled={isProcessing}
                 className="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 font-bold text-slate-950 text-xs uppercase disabled:opacity-50 cursor-pointer"
               >
-                {isProcessing ? "Processing..." : "Confirm on Sepolia"}
+                {isProcessing ? "Processing..." : "Confirm on Robinhood"}
               </button>
             </div>
           </div>
@@ -431,7 +431,7 @@ export function MarketplaceView() {
             </div>
 
             <p className="text-xs text-slate-400 mb-4">
-              Select one of your minted cards from your collection to list for sale in SepoliaETH.
+              Select one of your minted cards from your collection to list for sale in ETH.
             </p>
 
             {/* Select card from collection */}
@@ -445,7 +445,7 @@ export function MarketplaceView() {
                   <div className="py-6 px-4 rounded-xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs text-center space-y-2 font-mono mb-4">
                     <div className="font-bold text-amber-300">No On-Chain Minted Cards Found</div>
                     <p className="text-[11px] text-slate-400 font-hanken leading-relaxed">
-                      Cards currently in your collection are local starter deck practice cards. Only verifiable ERC-721 NFT cards minted to your wallet on Ethereum Sepolia can be listed on the secondary market.
+                      Cards currently in your collection are local starter deck practice cards. Only verifiable ERC-721 NFT cards minted to your wallet on Robinhood Chain Testnet can be listed on the secondary market.
                     </p>
                     <div className="pt-2">
                       <Link
@@ -453,7 +453,7 @@ export function MarketplaceView() {
                         onClick={() => setShowListModal(false)}
                         className="inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-slate-950 font-bold text-xs uppercase"
                       >
-                        Open Booster Pack on Sepolia
+                        Open Booster Pack on Robinhood
                       </Link>
                     </div>
                   </div>
@@ -487,7 +487,7 @@ export function MarketplaceView() {
             {cardToList && (
               <div className="space-y-3">
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">Listing Price (SepoliaETH):</label>
+                  <label className="text-xs text-slate-400 block mb-1">Listing Price (ETH):</label>
                   <input
                     type="number"
                     step="0.01"
@@ -502,13 +502,13 @@ export function MarketplaceView() {
                   <div className="flex justify-between">
                     <span>Marketplace Protocol Fee (2.5%):</span>
                     <span className="text-emerald-400">
-                      {((parseFloat(listPriceInput) || 0) * 0.025).toFixed(5)} SepoliaETH
+                      {((parseFloat(listPriceInput) || 0) * 0.025).toFixed(5)} ETH
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span>You receive upon sale:</span>
                     <span className="text-slate-200 font-bold">
-                      {((parseFloat(listPriceInput) || 0) * 0.975).toFixed(5)} SepoliaETH
+                      {((parseFloat(listPriceInput) || 0) * 0.975).toFixed(5)} ETH
                     </span>
                   </div>
                 </div>
@@ -518,7 +518,7 @@ export function MarketplaceView() {
                   disabled={isProcessing}
                   className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-bold text-slate-950 text-xs uppercase tracking-wider transition-all disabled:opacity-50 cursor-pointer"
                 >
-                  {isProcessing ? "Approving & Listing..." : "Approve & List on Sepolia"}
+                  {isProcessing ? "Approving & Listing..." : "Approve & List on Robinhood"}
                 </button>
               </div>
             )}

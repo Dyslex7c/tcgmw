@@ -5,10 +5,10 @@ import {
   getBrowserWalletClient,
   packContractConfig,
   cardContractConfig,
-  ensureSepoliaNetwork
+  ensureRobinhoodNetwork
 } from "@/lib/web3/client";
 import { parseEther, decodeEventLog, Hex } from "viem";
-import { sepolia } from "viem/chains";
+import { robinhoodTestnet } from "@/lib/web3/chains";
 
 export const PACK_CONFIGS: Record<PackTier, PackInfo> = {
   Starter: {
@@ -16,7 +16,7 @@ export const PACK_CONFIGS: Record<PackTier, PackInfo> = {
     name: "Starter Booster",
     priceEth: 0.005,
     cardCount: 3,
-    description: "3 random crypto battle cards minted directly on Ethereum Sepolia. 20% routed to Prize Pool.",
+    description: "3 random crypto battle cards minted directly on Robinhood Chain Testnet. 20% routed to Prize Pool.",
     badge: "Most Popular",
     odds: {
       common: 60,
@@ -78,15 +78,15 @@ const FOIL_MAP: Record<number, FoilType> = {
 };
 
 /**
- * Purchases a pack on-chain via AvoxPackVRF on Sepolia
+ * Purchases a pack on-chain via AvoxPackVRF on Robinhood Chain Testnet
  */
 export async function buyPackOnChain(
   tier: PackTier,
   buyerAddress: `0x${string}`
 ): Promise<Hex> {
-  const isSepolia = await ensureSepoliaNetwork();
-  if (!isSepolia) {
-    throw new Error("Please switch your wallet to Ethereum Sepolia network.");
+  const isRobinhood = await ensureRobinhoodNetwork();
+  if (!isRobinhood) {
+    throw new Error("Please switch your wallet to Robinhood Chain Testnet.");
   }
 
   const walletClient = await getBrowserWalletClient();
@@ -122,7 +122,7 @@ export async function buyPackOnChain(
     args: [tierIndex],
     value: priceWei,
     account: buyerAddress,
-    chain: sepolia,
+    chain: robinhoodTestnet,
     ...(gasLimit ? { gas: gasLimit } : {})
   });
 
@@ -130,7 +130,7 @@ export async function buyPackOnChain(
 }
 
 /**
- * Awaits transaction receipt on Sepolia and decodes minted cards & VRF proof
+ * Awaits transaction receipt on Robinhood Chain Testnet and decodes minted cards & VRF proof
  */
 export async function waitForPackFulfillment(
   txHash: Hex
@@ -210,7 +210,7 @@ export async function waitForPackFulfillment(
 
   if (foundTokenIds.length === 0) {
     throw new Error(
-      `Transaction confirmed on Sepolia, but could not detect minted token IDs. Please check transaction receipt on Etherscan (${txHash.slice(0, 10)}...).`
+      `Transaction confirmed on Robinhood Chain Testnet, but could not detect minted token IDs. Please check transaction receipt on Robinhood Explorer (${txHash.slice(0, 10)}...).`
     );
   }
 

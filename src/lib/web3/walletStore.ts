@@ -1,5 +1,5 @@
 import { formatEther } from "viem";
-import { publicClient, ensureSepoliaNetwork } from "./client";
+import { publicClient, ensureRobinhoodNetwork } from "./client";
 import { CONTRACT_CONFIG } from "@/lib/constants/contracts";
 import { wagmiConfig } from "./wagmiConfig";
 import {
@@ -137,7 +137,7 @@ class WalletStore {
   }
 
   public async switchNetwork(): Promise<boolean> {
-    const success = await ensureSepoliaNetwork();
+    const success = await ensureRobinhoodNetwork();
     if (success) {
       this.state.chainId = CONTRACT_CONFIG.chainId;
       this.state.isCorrectNetwork = true;
@@ -165,7 +165,7 @@ class WalletStore {
       // Fallback to direct injected wallet if Reown modal has an issue
       try {
         if ((window as any).ethereum) {
-          await ensureSepoliaNetwork();
+          await ensureRobinhoodNetwork();
           const accounts = await (window as any).ethereum.request({
             method: "eth_requestAccounts"
           });
@@ -235,13 +235,13 @@ class WalletStore {
   }
 
   /**
-   * Fetches the user's real SepoliaETH balance specifically from Ethereum Sepolia (Chain ID: 11155111)
+   * Fetches the user's real ETH balance specifically from Robinhood Chain Testnet (Chain ID: 46630)
    */
   public async refreshBalance() {
     if (!this.state.address) return;
     const address = this.state.address as `0x${string}`;
 
-    // 1. First priority: Wagmi getBalance specifically on Ethereum Sepolia
+    // 1. First priority: Wagmi getBalance specifically on Robinhood Chain Testnet
     try {
       const wagmiBal = await getBalance(wagmiConfig, {
         address,
@@ -275,7 +275,7 @@ class WalletStore {
       }
     }
 
-    // 3. Third priority: viem publicClient configured for Sepolia
+    // 3. Third priority: viem publicClient configured for Robinhood Chain Testnet
     try {
       const balanceWei = await publicClient.getBalance({
         address
@@ -283,7 +283,7 @@ class WalletStore {
       this.state.ethBalance = parseFloat(formatEther(balanceWei));
       this.notify();
     } catch (err) {
-      console.warn("Could not fetch on-chain Sepolia balance:", err);
+      console.warn("Could not fetch on-chain Robinhood balance:", err);
     }
   }
 }

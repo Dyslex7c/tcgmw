@@ -139,7 +139,7 @@ export function PrizePoolView() {
               <button
                 onClick={() => prizePoolStore.refreshFromContract()}
                 className="ml-2 text-slate-400 hover:text-slate-200"
-                title="Refresh from Sepolia"
+                title="Refresh from Robinhood"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
               </button>
@@ -151,7 +151,7 @@ export function PrizePoolView() {
               {state.currentSeasonPool.toFixed(4)} ETH Inflow Vault
             </div>
             <p className="text-xs text-slate-400 max-w-xl">
-              Funded transparently on-chain from 20% of all pack sales and 2.5% of secondary marketplace volume on Ethereum Sepolia.
+              Funded transparently on-chain from 20% of all pack sales and 2.5% of secondary marketplace volume on Robinhood Chain Testnet.
             </p>
           </div>
 
@@ -218,7 +218,7 @@ export function PrizePoolView() {
           </h3>
           <div className="space-y-2 text-xs font-mono">
             <div className="p-2.5 rounded-lg bg-[#0E1320] border border-slate-800 flex justify-between items-center">
-              <span className="text-slate-400">Sepolia Prize Pool Contract:</span>
+              <span className="text-slate-400">Robinhood Prize Pool Contract:</span>
               <a
                 href={getExplorerAddressUrl(CONTRACT_CONFIG.prizePoolContract)}
                 target="_blank"
@@ -280,7 +280,7 @@ export function PrizePoolView() {
               On-Chain Inflow Ledger ({state.inflows.length} Transactions)
             </h2>
           </div>
-          <span className="text-xs text-slate-400 font-mono">ETHEREUM SEPOLIA HISTORY</span>
+          <span className="text-xs text-slate-400 font-mono">ROBINHOOD CHAIN TESTNET HISTORY</span>
         </div>
 
         {state.inflows.length === 0 ? (

@@ -2,7 +2,7 @@
 
 import React, { ReactNode, useState } from "react";
 import { createAppKit } from "@reown/appkit/react";
-import { sepolia } from "@reown/appkit/networks";
+import { robinhoodTestnet } from "@/lib/web3/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 
@@ -37,7 +37,7 @@ const metadata = {
 export const modal = createAppKit({
   adapters: [wagmiAdapter],
   networks: networks as any,
-  defaultNetwork: sepolia,
+  defaultNetwork: robinhoodTestnet as any,
   allowUnsupportedChain: true,
   enableReconnect: false,
   enableWalletGuide: false,

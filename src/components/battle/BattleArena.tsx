@@ -687,7 +687,7 @@ export function BattleArena({ onOpenSimulator }: BattleArenaProps) {
                   <div className="text-[10px] text-slate-500 uppercase">AVOX Vault</div>
                   <div className="font-bold text-orange-400 flex items-center justify-end space-x-1">
                     <Image src="/logo.png" alt="AVOX" width={13} height={13} className="w-3.5 h-3.5 object-contain" />
-                    <span>{profile.avoxBalance ?? 100} AVOX</span>
+                    <span>0 AVOX</span>
                   </div>
                 </div>
                 <div className="text-right pr-3 border-r border-slate-800">

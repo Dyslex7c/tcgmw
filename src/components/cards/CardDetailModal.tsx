@@ -6,6 +6,7 @@ import { Card, CardRarity } from "@/types";
 import { sound } from "@/lib/audio/soundEngine";
 import { marketService } from "@/lib/market/priceFeed";
 import { getChainLogoUrl } from "@/lib/constants/chainLogos";
+import { CONTRACT_CONFIG } from "@/lib/constants/contracts";
 import { BorderGlow } from "@/components/ui/BorderGlow";
 import {
   X,
@@ -121,7 +122,7 @@ export function CardDetailModal({ card, onClose }: CardDetailModalProps) {
 
   const handleCopyContract = () => {
     sound.playClick();
-    navigator.clipboard.writeText("0x799C0212a45B7B124C270bA33De49F27E9113B92");
+    navigator.clipboard.writeText(CONTRACT_CONFIG.cardContract);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -553,7 +554,7 @@ export function CardDetailModal({ card, onClose }: CardDetailModalProps) {
                   className="flex items-center space-x-1 text-slate-300 hover:text-emerald-400 transition-colors"
                   title="Copy contract address"
                 >
-                  <span>0x799C...3B92 (Sepolia)</span>
+                  <span>{CONTRACT_CONFIG.cardContract.slice(0, 6)}...{CONTRACT_CONFIG.cardContract.slice(-4)} (Robinhood)</span>
                   {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 </button>
               </div>
