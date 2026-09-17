@@ -61,7 +61,7 @@ export function PackOpeningStage() {
     // Check balance against requested tier
     if (wallet.ethBalance < targetConfig.priceEth) {
       setErrorMessage(
-        `Insufficient ETH balance (${wallet.ethBalance.toFixed(4)} ETH). You need at least ${targetConfig.priceEth} ETH to buy a ${targetConfig.name}. Please claim free testnet funds from a Robinhood faucet below.`
+        `Insufficient ETH balance (${wallet.ethBalance.toFixed(4)} ETH). You need at least ${targetConfig.priceEth} ETH to buy a ${targetConfig.name}. Please ensure your wallet has ETH on Robinhood Chain.`
       );
       return;
     }
@@ -74,7 +74,7 @@ export function PackOpeningStage() {
       // Step 1: Send on-chain transaction to AvoxPackVRF
       const txHash = await buyPackOnChain(tierToBuy, currentAddr as `0x${string}`);
       setPendingTxHash(txHash);
-      setVrfStatusText("Transaction broadcast! Awaiting Robinhood Chain Testnet confirmation & VRF fulfillment...");
+      setVrfStatusText("Transaction broadcast! Awaiting Robinhood Chain confirmation & VRF fulfillment...");
 
       // Step 2: Await fulfillment and read minted NFTs from contract
       const { cards, proof } = await waitForPackFulfillment(txHash);
@@ -98,9 +98,9 @@ export function PackOpeningStage() {
       ) {
         userMsg = "Transaction was cancelled in your Web3 wallet.";
       } else if (userMsg.includes("insufficient funds") || userMsg.includes("exceeds balance")) {
-        userMsg = `Insufficient balance (${wallet.ethBalance.toFixed(4)} ETH) to cover pack cost and gas fees. Please claim free testnet ETH from the Robinhood faucet.`;
+        userMsg = `Insufficient balance (${wallet.ethBalance.toFixed(4)} ETH) to cover pack cost and gas fees. Please ensure your wallet has ETH on Robinhood Chain.`;
       } else if (userMsg.includes("switch your wallet")) {
-        userMsg = "Please switch your wallet to Robinhood Chain Testnet (Chain ID: 46630).";
+        userMsg = "Please switch your wallet to Robinhood Chain (Chain ID: 4663).";
       }
 
       setErrorMessage(userMsg);
@@ -157,16 +157,16 @@ export function PackOpeningStage() {
           <div className="flex-1">
             <span className="font-bold block text-sm mb-0.5">Transaction Notice</span>
             <span className="leading-relaxed">{errorMessage}</span>
-            {errorMessage.toLowerCase().includes("faucet") && (
+            {errorMessage.toLowerCase().includes("robinhood") && (
               <div className="mt-3 flex flex-wrap items-center gap-2 pt-2 border-t border-red-800/40">
-                <span className="text-[11px] text-red-300 font-bold">Claim Free Robinhood ETH:</span>
+                <span className="text-[11px] text-red-300 font-bold">Robinhood Chain Explorer:</span>
                 <a
-                  href="https://faucet.testnet.chain.robinhood.com"
+                  href="https://robinhoodchain.blockscout.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-2.5 py-1 rounded-md bg-red-900/60 hover:bg-red-800 border border-red-700/60 text-cyan-300 text-[11px] font-mono inline-flex items-center space-x-1"
                 >
-                  <span>Robinhood Faucet</span>
+                  <span>Robinhood Blockscout</span>
                   <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
@@ -193,7 +193,7 @@ export function PackOpeningStage() {
               Booster Pack Cryptographic Opening
             </h1>
             <p className="text-sm text-slate-400 max-w-xl mx-auto mt-2">
-              Cards are minted directly as ERC-721 NFTs on Robinhood Chain Testnet. 20% of every pack purchase automatically fuels the transparent prize pool.
+              Cards are minted directly as ERC-721 NFTs on Robinhood Chain. 20% of every pack purchase automatically fuels the transparent prize pool.
             </p>
 
             {/* Wallet Status Banner */}

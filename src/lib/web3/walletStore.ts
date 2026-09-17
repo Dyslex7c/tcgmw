@@ -235,13 +235,13 @@ class WalletStore {
   }
 
   /**
-   * Fetches the user's real ETH balance specifically from Robinhood Chain Testnet (Chain ID: 46630)
+   * Fetches the user's real ETH balance specifically from Robinhood Chain (Chain ID: 4663)
    */
   public async refreshBalance() {
     if (!this.state.address) return;
     const address = this.state.address as `0x${string}`;
 
-    // 1. First priority: Wagmi getBalance specifically on Robinhood Chain Testnet
+    // 1. First priority: Wagmi getBalance specifically on Robinhood Chain
     try {
       const wagmiBal = await getBalance(wagmiConfig, {
         address,
@@ -275,7 +275,7 @@ class WalletStore {
       }
     }
 
-    // 3. Third priority: viem publicClient configured for Robinhood Chain Testnet
+    // 3. Third priority: viem publicClient configured for Robinhood Chain
     try {
       const balanceWei = await publicClient.getBalance({
         address

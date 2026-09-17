@@ -8,7 +8,7 @@ import {
   ensureRobinhoodNetwork
 } from "@/lib/web3/client";
 import { parseEther, formatEther, decodeEventLog } from "viem";
-import { robinhoodTestnet } from "@/lib/web3/chains";
+import { robinhood } from "@/lib/web3/chains";
 
 const RARITY_MAP: Record<number, CardRarity> = {
   0: "Common",
@@ -51,7 +51,7 @@ class MarketplaceStore {
   }
 
   /**
-   * Fetches real active listings from the Robinhood Chain Testnet blockchain
+   * Fetches real active listings from the Robinhood Chain blockchain
    */
   public async refreshListingsFromContract() {
     if (this.isRefreshing) return;
@@ -167,7 +167,7 @@ class MarketplaceStore {
   ): Promise<string> {
     const isRobinhood = await ensureRobinhoodNetwork();
     if (!isRobinhood) {
-      throw new Error("Please switch your wallet to Robinhood Chain Testnet.");
+      throw new Error("Please switch your wallet to Robinhood Chain.");
     }
 
     const walletClient = await getBrowserWalletClient();
@@ -188,7 +188,7 @@ class MarketplaceStore {
 
       if (onChainOwner.toLowerCase() !== sellerAddress.toLowerCase()) {
         throw new Error(
-          `Your connected wallet (${sellerAddress.slice(0, 6)}...${sellerAddress.slice(-4)}) does not own Token #${tokenId} on Robinhood Chain Testnet. (On-chain owner: ${onChainOwner.slice(0, 6)}...${onChainOwner.slice(-4)}). You can only list cards that were minted directly to your wallet.`
+          `Your connected wallet (${sellerAddress.slice(0, 6)}...${sellerAddress.slice(-4)}) does not own Token #${tokenId} on Robinhood Chain. (On-chain owner: ${onChainOwner.slice(0, 6)}...${onChainOwner.slice(-4)}). You can only list cards that were minted directly to your wallet.`
         );
       }
     } catch (err: any) {
@@ -196,7 +196,7 @@ class MarketplaceStore {
         throw err;
       }
       throw new Error(
-        `Card #${tokenId} does not exist on-chain on Robinhood Chain Testnet yet! Starter cards are for local battle practice; please open a Booster Pack in the Pack Store to mint your real on-chain NFT cards first.`
+        `Card #${tokenId} does not exist on-chain on Robinhood Chain yet! Starter cards are for local battle practice; please open a Booster Pack in the Pack Store to mint your real on-chain NFT cards first.`
       );
     }
 
@@ -213,7 +213,7 @@ class MarketplaceStore {
         functionName: "approve",
         args: [marketplaceContractConfig.address, tokenBigInt],
         account: sellerAddress,
-        chain: robinhoodTestnet,
+        chain: robinhood,
         gas: BigInt(100_000)
       });
       await publicClient.waitForTransactionReceipt({ hash: approveHash });
@@ -225,7 +225,7 @@ class MarketplaceStore {
       functionName: "listCard",
       args: [tokenBigInt, priceWei],
       account: sellerAddress,
-      chain: robinhoodTestnet,
+      chain: robinhood,
       gas: BigInt(200_000)
     });
 
@@ -244,7 +244,7 @@ class MarketplaceStore {
   ): Promise<string> {
     const isRobinhood = await ensureRobinhoodNetwork();
     if (!isRobinhood) {
-      throw new Error("Please switch your wallet to Robinhood Chain Testnet.");
+      throw new Error("Please switch your wallet to Robinhood Chain.");
     }
 
     const walletClient = await getBrowserWalletClient();
@@ -261,7 +261,7 @@ class MarketplaceStore {
       args: [tokenBigInt],
       value: priceWei,
       account: buyerAddress,
-      chain: robinhoodTestnet,
+      chain: robinhood,
       gas: BigInt(300_000)
     });
 
@@ -276,7 +276,7 @@ class MarketplaceStore {
   public async cancelListingOnChain(tokenId: number, sellerAddress: `0x${string}`): Promise<string> {
     const isRobinhood = await ensureRobinhoodNetwork();
     if (!isRobinhood) {
-      throw new Error("Please switch your wallet to Robinhood Chain Testnet.");
+      throw new Error("Please switch your wallet to Robinhood Chain.");
     }
 
     const walletClient = await getBrowserWalletClient();
@@ -289,7 +289,7 @@ class MarketplaceStore {
       functionName: "cancelListing",
       args: [BigInt(tokenId)],
       account: sellerAddress,
-      chain: robinhoodTestnet,
+      chain: robinhood,
       gas: BigInt(150_000)
     });
 

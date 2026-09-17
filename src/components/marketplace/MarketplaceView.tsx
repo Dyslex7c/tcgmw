@@ -381,7 +381,7 @@ export function MarketplaceView() {
           <div className="w-full max-w-md bg-[#0B0F18] border border-slate-800 rounded-2xl p-6 text-slate-100 shadow-2xl">
             <h3 className="font-bold text-lg mb-2">Confirm Card Purchase</h3>
             <p className="text-xs text-slate-400 mb-4">
-              You are purchasing <strong>{buyingListing.card.name} (#{buyingListing.card.tokenId})</strong> on Robinhood Chain Testnet.
+              You are purchasing <strong>{buyingListing.card.name} (#{buyingListing.card.tokenId})</strong> on Robinhood Chain.
             </p>
 
             <div className="p-3 rounded-lg bg-[#111724] border border-slate-800 space-y-2 text-xs font-mono mb-4">
@@ -445,7 +445,7 @@ export function MarketplaceView() {
                   <div className="py-6 px-4 rounded-xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs text-center space-y-2 font-mono mb-4">
                     <div className="font-bold text-amber-300">No On-Chain Minted Cards Found</div>
                     <p className="text-[11px] text-slate-400 font-hanken leading-relaxed">
-                      Cards currently in your collection are local starter deck practice cards. Only verifiable ERC-721 NFT cards minted to your wallet on Robinhood Chain Testnet can be listed on the secondary market.
+                      Cards currently in your collection are local starter deck practice cards. Only verifiable ERC-721 NFT cards minted to your wallet on Robinhood Chain can be listed on the secondary market.
                     </p>
                     <div className="pt-2">
                       <Link

@@ -151,7 +151,7 @@ export function PrizePoolView() {
               {state.currentSeasonPool.toFixed(4)} ETH Inflow Vault
             </div>
             <p className="text-xs text-slate-400 max-w-xl">
-              Funded transparently on-chain from 20% of all pack sales and 2.5% of secondary marketplace volume on Robinhood Chain Testnet.
+              Funded transparently on-chain from 20% of all pack sales and 2.5% of secondary marketplace volume on Robinhood Chain.
             </p>
           </div>
 
@@ -280,7 +280,7 @@ export function PrizePoolView() {
               On-Chain Inflow Ledger ({state.inflows.length} Transactions)
             </h2>
           </div>
-          <span className="text-xs text-slate-400 font-mono">ROBINHOOD CHAIN TESTNET HISTORY</span>
+          <span className="text-xs text-slate-400 font-mono">ROBINHOOD CHAIN HISTORY</span>
         </div>
 
         {state.inflows.length === 0 ? (

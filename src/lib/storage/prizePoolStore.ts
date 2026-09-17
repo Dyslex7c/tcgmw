@@ -1,7 +1,7 @@
 import { PrizeInflowRecord } from "@/types";
 import { publicClient, getBrowserWalletClient, prizePoolContractConfig, ensureRobinhoodNetwork } from "@/lib/web3/client";
 import { formatEther, parseEther } from "viem";
-import { robinhoodTestnet } from "@/lib/web3/chains";
+import { robinhood } from "@/lib/web3/chains";
 
 export interface PrizePoolOnChainState {
   currentSeasonPool: number;
@@ -38,11 +38,11 @@ class PrizePoolStore {
     return { ...this.state };
   }
 
-  public subscribe(fn: PrizePoolListener): () => void {
-    this.listeners.add(fn);
-    fn(this.getState());
+  public subscribe(listener: PrizePoolListener): () => void {
+    this.listeners.add(listener);
+    listener(this.getState());
     return () => {
-      this.listeners.delete(fn);
+      this.listeners.delete(listener);
     };
   }
 
@@ -52,7 +52,7 @@ class PrizePoolStore {
   }
 
   /**
-   * Reads the real on-chain prize pool state directly from Robinhood Chain Testnet
+   * Reads the real on-chain prize pool state directly from Robinhood Chain
    */
   public async refreshFromContract() {
     try {
@@ -114,7 +114,7 @@ class PrizePoolStore {
   public async donateToPrizePool(amountEth: number, senderAddress: `0x${string}`) {
     const isRobinhood = await ensureRobinhoodNetwork();
     if (!isRobinhood) {
-      throw new Error("Please connect your wallet to Robinhood Chain Testnet.");
+      throw new Error("Please connect your wallet to Robinhood Chain.");
     }
 
     const walletClient = await getBrowserWalletClient();
@@ -129,7 +129,7 @@ class PrizePoolStore {
       args: ["Direct Player Donation"],
       value: valueWei,
       account: senderAddress,
-      chain: robinhoodTestnet,
+      chain: robinhood,
       gas: BigInt(150_000)
     });
 

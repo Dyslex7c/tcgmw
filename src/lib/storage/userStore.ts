@@ -1,6 +1,8 @@
 import { Card, AssetSymbol, CardRarity, FoilType } from "@/types";
 import { BASE_CARD_CATALOG } from "@/lib/storage/mockCards";
 import { publicClient, cardContractConfig } from "@/lib/web3/client";
+import { CONTRACT_CONFIG } from "@/lib/constants/contracts";
+import { erc20Abi, formatUnits } from "viem";
 
 export interface UserProfile {
   address: string;
@@ -28,6 +30,13 @@ const FOIL_MAP: Record<number, FoilType> = {
   2: "GoldFoil"
 };
 
+const robinhoodCard =
+  BASE_CARD_CATALOG.find((c) => c.assetSymbol === "ROBINHOOD") || BASE_CARD_CATALOG[0];
+const btcCard =
+  BASE_CARD_CATALOG.find((c) => c.assetSymbol === "BTC") || BASE_CARD_CATALOG[0];
+const ethCard =
+  BASE_CARD_CATALOG.find((c) => c.assetSymbol === "ETH") || BASE_CARD_CATALOG[1];
+
 class UserStore {
   private profile: UserProfile = {
     address: "Not Connected",
@@ -35,14 +44,14 @@ class UserStore {
     ethBalance: 0,
     avoxBalance: 0,
     collection: [
-      BASE_CARD_CATALOG[0], // BTC
-      BASE_CARD_CATALOG[1], // ETH
-      BASE_CARD_CATALOG[2]  // SOL
+      robinhoodCard, // Robinhood mainnet token card
+      btcCard,       // BTC
+      ethCard        // ETH
     ],
     deckCardIds: [
-      BASE_CARD_CATALOG[0].id,
-      BASE_CARD_CATALOG[1].id,
-      BASE_CARD_CATALOG[2].id
+      robinhoodCard.id,
+      btcCard.id,
+      ethCard.id
     ],
     wins: 0,
     losses: 0,
@@ -66,6 +75,14 @@ class UserStore {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && Array.isArray(parsed.collection) && parsed.collection.length > 0) {
+          // Ensure Robinhood card is present so all players can play with it immediately
+          const hasRobinhood = parsed.collection.some((c: Card) => c.assetSymbol === "ROBINHOOD");
+          if (!hasRobinhood) {
+            parsed.collection.unshift(robinhoodCard);
+            if (!parsed.deckCardIds?.includes(robinhoodCard.id)) {
+              parsed.deckCardIds = [robinhoodCard.id, ...(parsed.deckCardIds || []).slice(0, 2)];
+            }
+          }
           this.profile.collection = parsed.collection;
           this.profile.deckCardIds = parsed.deckCardIds || this.profile.deckCardIds;
           this.profile.wins = parsed.wins || 0;
@@ -181,10 +198,37 @@ class UserStore {
     this.profile.isGuest = false;
     this.notify();
     this.syncWithOnChainCards(address);
+    this.syncAvoxTokenBalance(address);
   }
 
   /**
-   * Syncs user cards from AvoxCard ERC-721 contract on Robinhood Chain Testnet
+   * Syncs user's real on-chain $AVOX ERC-20 token balance from Robinhood Chain
+   */
+  public async syncAvoxTokenBalance(address: string) {
+    if (!address || !address.startsWith("0x")) return;
+    const tokenAddr = CONTRACT_CONFIG.avoxTokenContract;
+    if (!tokenAddr || tokenAddr === "0x0000000000000000000000000000000000000000") return;
+
+    try {
+      const rawBal = (await publicClient.readContract({
+        address: tokenAddr as `0x${string}`,
+        abi: erc20Abi,
+        functionName: "balanceOf",
+        args: [address as `0x${string}`]
+      })) as bigint;
+
+      const formatted = parseFloat(formatUnits(rawBal, 18));
+      this.profile.avoxBalance = formatted;
+      this.saveState();
+      this.notify();
+      console.log(`On-chain AVOX token balance for ${address}: ${formatted}`);
+    } catch (e) {
+      console.warn("Could not query on-chain AVOX token balance:", e);
+    }
+  }
+
+  /**
+   * Syncs user cards from AvoxCard ERC-721 contract on Robinhood Chain
    */
   public async syncWithOnChainCards(address: string) {
     if (!address || !address.startsWith("0x")) return;

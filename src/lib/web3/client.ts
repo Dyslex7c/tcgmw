@@ -7,7 +7,7 @@ import {
   PublicClient,
   WalletClient
 } from "viem";
-import { robinhoodTestnet } from "./chains";
+import { robinhood, robinhoodTestnet } from "./chains";
 import { CONTRACT_CONFIG } from "@/lib/constants/contracts";
 import {
   AvoxCardABI,
@@ -19,18 +19,18 @@ import {
 import { getWalletClient, switchChain, getChainId } from "wagmi/actions";
 import { wagmiConfig, projectId } from "./wagmiConfig";
 
-// RPC endpoints for Robinhood Chain Testnet (Chain ID: 46630)
-export const ROBINHOOD_TESTNET_RPC_URLS = [
+// RPC endpoints for Robinhood Chain (Chain ID: 4663)
+export const ROBINHOOD_RPC_URLS = [
   CONTRACT_CONFIG.rpcUrl,
-  "https://rpc.testnet.chain.robinhood.com"
+  "https://rpc.mainnet.chain.robinhood.com"
 ];
 
 /**
- * Global viem Public Client for reading smart contract state on Robinhood Chain Testnet
+ * Global viem Public Client for reading smart contract state on Robinhood Chain
  */
 export const publicClient: PublicClient = createPublicClient({
-  chain: robinhoodTestnet,
-  transport: fallback(ROBINHOOD_TESTNET_RPC_URLS.map((url) => http(url, { timeout: 10_000 })))
+  chain: robinhood,
+  transport: fallback(ROBINHOOD_RPC_URLS.map((url) => http(url, { timeout: 10_000 })))
 });
 
 /**
@@ -52,7 +52,7 @@ export async function getBrowserWalletClient(): Promise<WalletClient | null> {
 
   if ((window as any).ethereum) {
     return createWalletClient({
-      chain: robinhoodTestnet,
+      chain: robinhood,
       transport: custom((window as any).ethereum)
     });
   }
@@ -61,14 +61,14 @@ export async function getBrowserWalletClient(): Promise<WalletClient | null> {
 }
 
 /**
- * Ensures the connected wallet is on Robinhood Chain Testnet (Chain ID: 46630)
+ * Ensures the connected wallet is on Robinhood Chain (Chain ID: 4663)
  */
 export async function ensureRobinhoodNetwork(): Promise<boolean> {
   if (typeof window === "undefined") {
     return false;
   }
 
-  // 1. Check if wagmi is already on Robinhood Chain Testnet
+  // 1. Check if wagmi is already on Robinhood Chain Mainnet (or testnet)
   try {
     const activeChainId = getChainId(wagmiConfig);
     if (activeChainId === CONTRACT_CONFIG.chainId) {
@@ -134,7 +134,7 @@ export async function ensureRobinhoodNetwork(): Promise<boolean> {
       throw switchError;
     }
   } catch (err) {
-    console.error("Failed to switch/add Robinhood Testnet network:", err);
+    console.error("Failed to switch/add Robinhood Chain network:", err);
     return false;
   }
 }

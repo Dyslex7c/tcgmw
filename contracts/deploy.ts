@@ -12,6 +12,27 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import { hardhat } from "viem/chains";
 
+const robinhood = defineChain({
+  id: 4663,
+  name: "Robinhood Chain",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH"
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.mainnet.chain.robinhood.com"]
+    }
+  },
+  blockExplorers: {
+    default: {
+      name: "Robinhood Explorer",
+      url: "https://robinhoodchain.blockscout.com"
+    }
+  }
+});
+
 const robinhoodTestnet = defineChain({
   id: 46630,
   name: "Robinhood Chain Testnet",
@@ -133,10 +154,10 @@ export async function main() {
   const account = privateKeyToAccount(privateKey);
   console.log("👤 Deployer Account: " + account.address);
 
-  // Target network: Robinhood Chain Testnet (or local)
-  let targetChain: any = robinhoodTestnet;
-  let rpcUrl = env.ROBINHOOD_RPC || "https://rpc.testnet.chain.robinhood.com";
-  let explorer = "https://explorer.testnet.chain.robinhood.com";
+  // Target network: Robinhood Chain Mainnet (or local)
+  let targetChain: any = robinhood;
+  let rpcUrl = env.ROBINHOOD_RPC || "https://rpc.mainnet.chain.robinhood.com";
+  let explorer = "https://robinhoodchain.blockscout.com";
 
   if (isTargetLocal) {
     targetChain = { ...hardhat, id: 31337 } as any;

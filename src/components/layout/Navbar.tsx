@@ -31,7 +31,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
   const [isMuted, setIsMuted] = useState(sound.getMuted());
   const [showWalletModal, setShowWalletModal] = useState(false);
 
-  // Dedicated reactive balance query targeting Robinhood Chain Testnet (Chain ID: 46630)
+  // Dedicated reactive balance query targeting Robinhood Chain (Chain ID: 4663)
   const { data: wagmiBalance, refetch: refetchWagmiBalance } = useBalance({
     address: wallet.address ? (wallet.address as `0x${string}`) : undefined,
     chainId: CONTRACT_CONFIG.chainId
@@ -234,7 +234,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                 onClick={handleSwitchNetwork}
                 disabled={isSwitchingNetwork}
                 className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/40 hover:border-amber-400 text-amber-300 font-mono text-[10px] uppercase font-bold transition-all cursor-pointer animate-pulse disabled:opacity-50 backdrop-blur-xl shadow-[0_0_15px_rgba(245,158,11,0.15)]"
-                title="Switch to Robinhood Chain Testnet"
+                title="Switch to Robinhood Chain"
               >
                 <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
                 <span className="hidden sm:inline">
@@ -356,7 +356,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                         }`}
                       >
                         <ShieldCheck className="w-3.5 h-3.5" />
-                        <span>{wallet.isCorrectNetwork ? "Robinhood Testnet (#46630)" : "Wrong Network"}</span>
+                        <span>{wallet.isCorrectNetwork ? "Robinhood Chain (#4663)" : "Wrong Network"}</span>
                       </span>
                     </div>
                   </div>
@@ -365,7 +365,7 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                     <div className="p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
-                        <span>Please switch your wallet to Robinhood Chain Testnet.</span>
+                        <span>Please switch your wallet to Robinhood Chain.</span>
                       </div>
                       <button
                         onClick={handleSwitchNetwork}
@@ -378,24 +378,24 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                   )}
 
                   <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] text-[11px] text-slate-400 space-y-1">
-                    <div className="font-bold text-slate-300">Need Free Robinhood Testnet ETH?</div>
-                    <div>Claim free Robinhood testnet ETH for gas & card packs:</div>
+                    <div className="font-bold text-slate-300">Robinhood Chain (Mainnet)</div>
+                    <div>Chain ID: 4663 | Native Gas: ETH</div>
                     <div className="flex flex-wrap gap-2 pt-1 font-mono text-[10px]">
                       <a
-                        href="https://faucet.testnet.chain.robinhood.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-cyan-400 underline hover:text-cyan-300"
-                      >
-                        Robinhood Testnet Faucet ↗
-                      </a>
-                      <a
-                        href="https://explorer.testnet.chain.robinhood.com"
+                        href="https://robinhoodchain.blockscout.com"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-cyan-400 underline hover:text-cyan-300"
                       >
                         Robinhood Explorer ↗
+                      </a>
+                      <a
+                        href="https://robinhoodchain.blockscout.com/token/0xa8c46e442109a0a930a1a2aef7240b46d78f471f"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-orange-400 underline hover:text-orange-300"
+                      >
+                        $AVOX Token Contract ↗
                       </a>
                     </div>
                   </div>
@@ -405,6 +405,9 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                       onClick={() => {
                         refetchWagmiBalance?.();
                         walletStore.refreshBalance();
+                        if (wallet.address) {
+                          userStore.syncAvoxTokenBalance(wallet.address);
+                        }
                       }}
                       className="px-3 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-xs font-semibold text-slate-300 cursor-pointer transition-colors"
                     >
