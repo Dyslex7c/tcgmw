@@ -70,7 +70,8 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
     { href: "/packs", label: "Pack Store", badge: "VRF" },
     { href: "/marketplace", label: "Marketplace" },
     { href: "/collection", label: "Collection" },
-    { href: "/prize-pool", label: "Prize Pool", highlight: true }
+    { href: "/prize-pool", label: "Prize Pool", highlight: true },
+    { href: "https://myorg-41.gitbook.io/myorg-docs", label: "Docs", external: true }
   ];
 
   const toggleSound = () => {
@@ -164,8 +165,10 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                 <Link
                   key={item.href}
                   href={item.href}
+                  target={item.external ? "_blank" : undefined}
+                  rel={item.external ? "noopener noreferrer" : undefined}
                   onClick={() => sound.playClick()}
-                  className={`relative flex items-center space-x-2 px-4 py-1.5 rounded-full text-xs font-chakra font-semibold tracking-wider transition-all duration-200 ${
+                  className={`relative flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full text-xs font-chakra font-semibold tracking-wider transition-all duration-200 group ${
                     isActive
                       ? "bg-white/[0.1] text-orange-400 border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_2px_12px_rgba(0,0,0,0.35)]"
                       : "text-slate-400 hover:text-slate-100 hover:bg-white/[0.04] border border-transparent"
@@ -175,6 +178,9 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
                     <span className="w-1.5 h-1.5 rounded-full bg-orange-400 shadow-[0_0_8px_rgba(251,146,60,0.8)]" />
                   )}
                   <span>{item.label}</span>
+                  {item.external && (
+                    <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-orange-400 transition-colors" />
+                  )}
                   {item.badge && (
                     <span
                       className={`text-[9px] font-mono px-1.5 py-0.5 rounded-full ${
@@ -273,21 +279,24 @@ export function Navbar({ onOpenSimulator }: NavbarProps) {
         </div>
 
         {/* Mobile Navigation bar - Frosted Liquid Glass */}
-        <div className="md:hidden flex items-center justify-around py-2.5 px-2 border-t border-white/[0.06] bg-[#06080F]/80 backdrop-blur-2xl text-xs">
+        <div className="md:hidden flex items-center justify-around py-2.5 px-1.5 border-t border-white/[0.06] bg-[#06080F]/80 backdrop-blur-2xl text-xs overflow-x-auto no-scrollbar gap-1">
           {navLinks.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
                 onClick={() => sound.playClick()}
-                className={`px-3 py-1 rounded-full transition-all text-xs font-chakra tracking-wide ${
+                className={`px-2.5 py-1 rounded-full transition-all text-xs font-chakra tracking-wide shrink-0 inline-flex items-center space-x-1 ${
                   isActive
                     ? "bg-white/[0.1] text-orange-400 font-bold border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]"
                     : "text-slate-400 hover:text-slate-200"
                 }`}
               >
                 <span>{item.label}</span>
+                {item.external && <ExternalLink className="w-2.5 h-2.5 opacity-60" />}
               </Link>
             );
           })}

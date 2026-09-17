@@ -18,7 +18,8 @@ import {
   Globe,
   Flame,
   ArrowUpRight,
-  Sparkles
+  Sparkles,
+  BookOpen
 } from "lucide-react";
 
 interface FooterProps {
@@ -215,6 +216,24 @@ export function Footer({ onOpenSimulator }: FooterProps) {
                   </span>
                 </Link>
               </li>
+              <li>
+                <a
+                  href="https://myorg-41.gitbook.io/myorg-docs"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => sound.playClick()}
+                  className="flex items-center justify-between hover:text-orange-400 transition-colors py-0.5 group"
+                >
+                  <span className="flex items-center space-x-2">
+                    <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Documentation</span>
+                  </span>
+                  <span className="text-[10px] font-chakra font-bold text-emerald-400 flex items-center space-x-0.5">
+                    <span>GitBook</span>
+                    <ExternalLink className="w-2.5 h-2.5 ml-0.5" />
+                  </span>
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -278,6 +297,16 @@ export function Footer({ onOpenSimulator }: FooterProps) {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-hanken text-slate-500">
           <div className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-3 text-center sm:text-left">
             <span>&copy; 2026 AVOX Protocol. All rights reserved.</span>
+            <span className="hidden sm:inline text-slate-700">•</span>
+            <a
+              href="https://myorg-41.gitbook.io/myorg-docs"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-400 hover:text-orange-400 transition-colors inline-flex items-center space-x-1 font-chakra text-[11px]"
+            >
+              <span>Documentation</span>
+              <ExternalLink className="w-2.5 h-2.5 opacity-70" />
+            </a>
             <span className="hidden sm:inline text-slate-700">•</span>
             <span className="font-chakra text-[11px] text-slate-400">
               Verifiable Decentralized Card Battler
