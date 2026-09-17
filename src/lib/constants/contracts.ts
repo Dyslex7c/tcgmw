@@ -12,7 +12,7 @@ export const CONTRACT_CONFIG = {
   packContract: "0x1dc2656a699c1bf6d827c555c994f5fd89e1ff75" as `0x${string}`,
   marketplaceContract: "0xb20655cb8160350ece1897a86ebbf832b4c26851" as `0x${string}`,
   // AVOX Protocol Token Contract Address (Update here when deployed)
-  avoxTokenContract: "0x44445555555555555700000000000000000000000" as `0x${string}` | string
+  avoxTokenContract: "0xa8c46e442109a0a930a1a2aef7240b46d78f471f" as `0x${string}` | string
 };
 
 /**
